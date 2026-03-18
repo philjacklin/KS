@@ -46,6 +46,13 @@
     ]);
 </script>
 
+<input type="hidden" name="optOut" value={optOut} />
+<input type="hidden" name="tempReduction" value={tempReduction} />
+<input type="hidden" name="savingsSuspension" value={savingsSuspension} />
+<input type="hidden" name="employeeContributionRate" value={parseFloat(employeeRate)} />
+<input type="hidden" name="employerContributionRate" value={employerRate} />
+<input type="hidden" name="esctRate" value={parseFloat(esctRate)} />
+
 <Container className="space-y-8 p-8">
     <Card>
         <Typography variant="h2" as="h2" className="mb-4">{$t('kiwisaver.title')}</Typography>
@@ -91,7 +98,7 @@
     </Card>
 
     <Stack direction="row" spacing="4">
-        <Button variant="outline">{$t('kiwisaver.save')}</Button>
-        <Button>{$t('kiwisaver.save_and_next')}</Button>
+        <Button variant="outline" type="button">{$t('kiwisaver.save')}</Button>
+        <Button type="submit">{$t('kiwisaver.save_and_next')}</Button>
     </Stack>
 </Container>

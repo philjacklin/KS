@@ -48,6 +48,7 @@
 		"vitest": "^4.1.0"
 	},
 	"dependencies": {
+		"postgres": "^3.4.8",
 		"tailwind-variants": "^3.2.2"
 	}
 }
