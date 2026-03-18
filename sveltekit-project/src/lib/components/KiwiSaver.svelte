@@ -10,26 +10,27 @@
     import { t } from '$lib/stores/localeStore';
     import { Stack } from '$lib/components/ui/Stack';
     import { Container } from '$lib/components/ui/Container';
-    import { Layout } from '$lib/components/ui';
+    import { Accordion, AccordionItem, AccordionHeader, AccordionContent } from '$lib/components/ui/Accordion';
+    import { kiwiSaverVariants } from '$lib/components/kiwisaver/variants';
 
-    const DEFAULT_EMPLOYEE_RATE = '3.5%';
-    const DEFAULT_EMPLOYER_RATE = 3.5;
+    const { container, cardTitle, wrapper, inputWrapper, stack, button } = kiwiSaverVariants();
 
     let {
-        optOut = false,
-        tempReduction = false,
-        savingsSuspension = false,
-        employeeRate = DEFAULT_EMPLOYEE_RATE,
-        employerRate = DEFAULT_EMPLOYER_RATE,
-        matchEmployerRate = false,
-        contributionsIncluded = false,
-        otherSuper = false,
-        esctRate = '10.5%',
+        id,
+        optOut,
+        tempReduction,
+        savingsSuspension,
+        employeeRate,
+        employerRate,
+        matchEmployerRate,
+        contributionsIncluded,
+        otherSuper,
+        esctRate
     } = $props();
 
-    const employeeRateNumber = $derived(Math.max(parseFloat(employeeRate), 3.5));
+    let employeeRateNumber = $derived(Math.max(parseFloat(employeeRate || '0'), 3.5));
 
-    const employeeRateOptions = $derived([
+    const employeeRateOptions = ([
         { label: '3.5%', value: '3.5%' },
         { label: '4%', value: '4%' },
         { label: '6%', value: '6%' },
@@ -37,7 +38,7 @@
         { label: '10%', value: '10%' }
     ]);
 
-    const esctRateOptions = $derived([
+    const esctRateOptions = ([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
         { label: $t('kiwisaver.esct_17_5'), value: '17.5%' },
         { label: $t('kiwisaver.esct_30'), value: '30%' },
@@ -46,59 +47,75 @@
     ]);
 </script>
 
-<input type="hidden" name="optOut" value={optOut} />
-<input type="hidden" name="tempReduction" value={tempReduction} />
-<input type="hidden" name="savingsSuspension" value={savingsSuspension} />
-<input type="hidden" name="employeeContributionRate" value={parseFloat(employeeRate)} />
-<input type="hidden" name="employerContributionRate" value={employerRate} />
-<input type="hidden" name="esctRate" value={parseFloat(esctRate)} />
-
-<Container className="space-y-8 p-8">
-    <Card>
-        <Typography variant="h2" as="h2" className="mb-4">{$t('kiwisaver.title')}</Typography>
+<Container className={container()}>
+    <input type="hidden" name="id" value={id} />
+    <Card className="p-8">
+        <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.title')}</Typography>
         <Stack direction="column" spacing="4">
-            <Checkbox bind:checked={optOut} label={$t('kiwisaver.opt_out')} />
-            <Checkbox bind:checked={tempReduction} label={$t('kiwisaver.temp_reduction')} />
-            <Checkbox bind:checked={savingsSuspension} label={$t('kiwisaver.savings_suspension')} />
-            
-            <Layout cols={2} gap="1rem">
-                <Stack direction="column" spacing="1">
-                    <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
-                    <Select id="employee-rate" options={employeeRateOptions} bind:value={employeeRate} />
-                </Stack>
-                <Stack direction="column" spacing="1">
-                    <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
-                    <RangeSlider id="employer-rate" employeeRate={employeeRateNumber} bind:value={employerRate} />
-                </Stack>
-            </Layout>
-
-            <Stack direction="row" justify="between" align="center">
-                <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
-                <Slider id="match-rate" bind:checked={matchEmployerRate} />
+            <Stack className={wrapper()}>
+                <Checkbox checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
+            </Stack>
+            <Stack className={wrapper()}>
+                <Checkbox checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
+            </Stack>
+            <Stack className={wrapper()}>
+                <Checkbox checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
             </Stack>
             
-            <Stack direction="row" justify="between" align="center">
+            <Accordion>
+                <AccordionItem id="rates">
+                    <AccordionHeader>{$t('kiwisaver.rates_settings')}</AccordionHeader>
+                    <AccordionContent>
+                        <Stack direction="column" spacing="4">
+                            <Stack direction="column" spacing="1">
+                                <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
+                                <Stack className={inputWrapper()}>
+                                    <Select id="employee-rate" name="employeeContributionRate" options={employeeRateOptions} value={employeeRate} />
+                                </Stack>
+                            </Stack>
+                            <Stack direction="column" spacing="1">
+                                <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
+                                <Stack className={wrapper()}>
+                                    <!-- RangeSlider also needs name and hidden input support, but I haven't modified it yet. Wait, I should assume it works? Or modify it? -->
+                                    <RangeSlider id="employer-rate" name="employerContributionRate" employeeRate={employeeRateNumber} value={employerRate} />
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+
+            <Stack direction="row" justify="between" align="center" className={stack()}>
+                <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
+                <Slider id="match-rate" name="matchEmployerRate" checked={matchEmployerRate} />
+            </Stack>
+            
+            <Stack direction="row" justify="between" align="center" className={stack()}>
                 <Label for="contributions-included">{$t('kiwisaver.contributions_included')}</Label>
-                <Slider id="contributions-included" bind:checked={contributionsIncluded} />
+                <Slider id="contributions-included" name="contributionsIncluded" checked={contributionsIncluded} />
             </Stack>
         </Stack>
     </Card>
 
-    <Card>
-        <Typography variant="h2" as="h2" className="mb-4">{$t('kiwisaver.other_super')}</Typography>
-        <Checkbox bind:checked={otherSuper} label={$t('kiwisaver.contribute_super')} />
+    <Card className="p-8">
+        <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.other_super')}</Typography>
+        <Stack className={wrapper()}>
+            <Checkbox checked={otherSuper} name="otherSuper" value="true" label={$t('kiwisaver.contribute_super')} />
+        </Stack>
     </Card>
 
-    <Card>
-        <Typography variant="h2" as="h2" className="mb-4">{$t('kiwisaver.esct_title')}</Typography>
+    <Card className="p-8">
+        <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
         <Stack direction="column" spacing="1">
             <Label for="esct-rate" required>{$t('kiwisaver.esct_rate')}</Label>
-            <Select id="esct-rate" options={esctRateOptions} bind:value={esctRate} />
+            <Stack className={inputWrapper()}>
+                <Select id="esct-rate" name="esctRate" options={esctRateOptions} value={esctRate} />
+            </Stack>
         </Stack>
     </Card>
 
     <Stack direction="row" spacing="4">
-        <Button variant="outline" type="button">{$t('kiwisaver.save')}</Button>
-        <Button type="submit">{$t('kiwisaver.save_and_next')}</Button>
+        <Button variant="outline" type="submit" name="action" value="save" className={button()}>{$t('kiwisaver.save')}</Button>
+        <Button type="submit" name="action" value="saveAndNext" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
     </Stack>
 </Container>

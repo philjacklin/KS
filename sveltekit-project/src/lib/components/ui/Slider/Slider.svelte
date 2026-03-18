@@ -3,6 +3,7 @@
 
   let {
     id,
+    name = "",
     checked = $bindable(false),
     disabled = false,
     class: className = '',
@@ -10,6 +11,7 @@
     ...rest
   } = $props<{
     id?: string;
+    name?: string;
     checked?: boolean;
     disabled?: boolean;
     class?: string;
@@ -23,6 +25,7 @@
   }
 </script>
 
+<input type="hidden" {name} value={checked ? "true" : "false"} />
 <button
   {id}
   {...rest}

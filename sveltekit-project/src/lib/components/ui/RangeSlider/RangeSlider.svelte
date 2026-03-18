@@ -4,6 +4,7 @@
 
     let {
         id,
+        name = "",
         label,
         employeeRate,
         value = $bindable(0),
@@ -36,6 +37,7 @@
     <input
         type="range"
         {id}
+        {name}
         min={minRate}
         max={maxRate}
         step="0.5"

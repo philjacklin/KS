@@ -1,5 +1,6 @@
-import { sql } from '/server/db';
-import type { PageServerLoad, Actions } from './$types';
+import { type Actions, fail } from '@sveltejs/kit';
+import { sql } from '$lib/server/db';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
     const kiwisaver = await sql`SELECT * FROM kiwisavers LIMIT 1`;
@@ -11,24 +12,48 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
     update: async ({ request }) => {
         const data = await request.formData();
-        const id = data.get('id');
-        const employeeContributionRate = data.get('employeeContributionRate');
-        const employerContributionRate = data.get('employerContributionRate');
-        const optOut = data.get('optOut') === 'true';
-        const tempReduction = data.get('tempReduction') === 'true';
-        const savingsSuspension = data.get('savingsSuspension') === 'true';
-        const esctRate = data.get('esctRate');
+        const id = data.get('id') as string;
+
+        // Parse percentages (strip %)
+        const employeeContributionRate = Number((data.get('employeeContributionRate') as string || '').replace('%', ''));
+        const employerContributionRate = Number((data.get('employerContributionRate') as string || '').replace('%', ''));
+        const esctRate = Number((data.get('esctRate') as string || '').replace('%', ''));
+        
+        const optOutStatus = data.get('optOutStatus') === 'true';
+        const temporaryRateReductionStatus = data.get('temporaryRateReductionStatus') === 'true';
+        const savingsSuspensionStatus = data.get('savingsSuspensionStatus') === 'true';
+        
+        const matchEmployerRate = data.get('matchEmployerRate') === 'true';
+        const contributionsIncluded = data.get('contributionsIncluded') === 'true';
+        const otherSuper = data.get('otherSuper') === 'true';
+
+        if (isNaN(employeeContributionRate) || employeeContributionRate < 3.5) {
+            return fail(400, { error: 'Invalid employee contribution rate. Must be at least 3.5%.' });
+        }
+        
+        if (isNaN(employerContributionRate) || employerContributionRate < 0) {
+             return fail(400, { error: 'Invalid employer contribution rate.' });
+        }
+
+        if (isNaN(esctRate)) {
+            return fail(400, { error: 'Invalid ESCT rate.' });
+        }
         
         await sql`
             UPDATE kiwisavers
-            SET employee_contribution_rate = ${Number(employeeContributionRate)},
-                employer_contribution_rate = ${Number(employerContributionRate)},
-                opt_out_status = ${optOut},
-                temporary_rate_reduction_status = ${tempReduction},
-                savings_suspension_status = ${savingsSuspension},
-                esct_rate = ${Number(esctRate)}
+            SET 
+                employee_contribution_rate = ${employeeContributionRate},
+                employer_contribution_rate = ${employerContributionRate},
+                opt_out_status = ${optOutStatus},
+                temporary_rate_reduction_status = ${temporaryRateReductionStatus},
+                savings_suspension_status = ${savingsSuspensionStatus},
+                esct_rate = ${esctRate},
+                match_employer_rate = ${matchEmployerRate},
+                contributions_included = ${contributionsIncluded},
+                other_super = ${otherSuper}
             WHERE id = ${id}
         `;
+        
         return { success: true };
     }
 };

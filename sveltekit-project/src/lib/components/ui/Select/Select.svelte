@@ -8,6 +8,7 @@
 	let {
 		options = [],
 		value = null,
+		name = "",
 		multiple = false,
 		placeholder = $t('select.placeholder'),
 		disabled = false,
@@ -157,6 +158,7 @@
 </script>
 
 <div class={twMerge('relative w-full', className)} onkeydown={handleKeydown} role="none">
+    <input type="hidden" {name} value={selected} />
 	<button
 		bind:this={toggleButton}
 		type="button"

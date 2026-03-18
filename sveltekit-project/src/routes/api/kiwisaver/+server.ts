@@ -1,19 +1,31 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { sql } from '$lib/server/db';
 
-// Mock data storage
-let kiwisaverData = {
-    contributionRate: 0.03,
-    balance: 10000
-};
-
-export const GET: RequestHandler = async () => {
-    return json(kiwisaverData);
-};
-
-export const POST: RequestHandler = async ({ request }) => {
+export async function POST({ request }) {
     const data = await request.json();
-    // Update mock data
-    kiwisaverData = { ...kiwisaverData, ...data };
-    return json({ success: true, data: kiwisaverData });
-};
+
+    try {
+        // Validate input data
+        if (!data.id || !data.employee_id) {
+            return json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        // Use parameterized queries to prevent SQL injection
+        await sql`
+            UPDATE kiwisavers
+            SET 
+                employee_contribution_rate = ${data.employee_contribution_rate},
+                employer_contribution_rate = ${data.employer_contribution_rate},
+                opt_out_status = ${data.opt_out_status},
+                temporary_rate_reduction_status = ${data.temporary_rate_reduction_status},
+                savings_suspension_status = ${data.savings_suspension_status},
+                esct_rate = ${data.esct_rate}
+            WHERE id = ${data.id}
+        `;
+
+        return json({ success: true });
+    } catch (error) {
+        console.error(error);
+        return json({ error: 'Failed to update KiwiSaver data' }, { status: 500 });
+    }
+}
