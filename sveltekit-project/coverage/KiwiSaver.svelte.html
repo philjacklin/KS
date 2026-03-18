@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>93/93</span>
+                <span class='fraction'>88/90</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>60/60</span>
+                <span class='fraction'>59/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">95.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/47</span>
+                <span class='fraction'>47/49</span>
             </div>
         
             
@@ -179,12 +179,7 @@
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,18 +201,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -256,13 +241,18 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -309,7 +299,7 @@
     import { Card } from '$lib/components/ui/Card';
     import { Checkbox } from '$lib/components/ui/Checkbox';
     import { Select } from '$lib/components/ui/Select';
-    import { RangeSlider } from '$lib/components/ui/RangeSlider';
+    import { TextInput } from '$lib/components/ui/TextInput';
     import { Slider } from '$lib/components/ui/Slider';
     import { Button } from '$lib/components/ui/Button';
     import { Label } from '$lib/components/ui/Label';
@@ -327,23 +317,13 @@
         optOut,
         tempReduction,
         savingsSuspension,
-        employeeRate,
-        employerRate,
+        employeeRate = $bindable(),
+        employerRate = $bindable(),
         matchEmployerRate,
         contributionsIncluded,
         otherSuper,
         esctRate
     } = $props();
-&nbsp;
-    let employeeRateNumber = $derived(Math.max(parseFloat(employeeRate || <span class="branch-1 cbranch-no" title="branch not covered" >'0')</span>, 3.5));
-&nbsp;
-    const employeeRateOptions = ([
-        { label: '3.5%', value: '3.5%' },
-        { label: '4%', value: '4%' },
-        { label: '6%', value: '6%' },
-        { label: '8%', value: '8%' },
-        { label: '10%', value: '10%' }
-    ]);
 &nbsp;
     const esctRateOptions = ([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
@@ -376,16 +356,21 @@
                         &lt;Stack direction="column" spacing="4"&gt;
                             &lt;Stack direction="column" spacing="1"&gt;
                                 &lt;Label for="employee-rate" required&gt;{$t('kiwisaver.employee_rate')}&lt;/Label&gt;
-                                &lt;Stack className={inputWrapper()}&gt;
-                                    &lt;Select id="employee-rate" name="employeeContributionRate" options={employeeRateOptions} value={employeeRate} /&gt;
-                                &lt;/Stack&gt;
+                                &lt;TextInput
+                                    id="employee-rate"
+                                    name="employeeContributionRate"
+                                    bind:value={<span class="cstat-no" title="statement not covered" >employeeRate}</span>
+                                    className={inputWrapper()}
+                                /&gt;
                             &lt;/Stack&gt;
                             &lt;Stack direction="column" spacing="1"&gt;
                                 &lt;Label for="employer-rate" required&gt;{$t('kiwisaver.employer_rate')}&lt;/Label&gt;
-                                &lt;Stack className={wrapper()}&gt;
-                                    &lt;!-- RangeSlider also needs name and hidden input support, but I haven't modified it yet. Wait, I should assume it works? Or modify it? --&gt;
-                                    &lt;RangeSlider id="employer-rate" name="employerContributionRate" employeeRate={employeeRateNumber} value={employerRate} /&gt;
-                                &lt;/Stack&gt;
+                                &lt;TextInput
+                                    id="employer-rate"
+                                    name="employerContributionRate"
+                                    bind:value={<span class="cstat-no" title="statement not covered" >employerRate}</span>
+                                    className={inputWrapper()}
+                                /&gt;
                             &lt;/Stack&gt;
                         &lt;/Stack&gt;
                     &lt;/AccordionContent&gt;
@@ -433,7 +418,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-18T22:07:22.576Z
+                at 2026-03-18T22:29:36.137Z
             </div>
         <script src="prettify.js"></script>
         <script>

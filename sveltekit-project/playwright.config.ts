@@ -15,7 +15,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'DATABASE_URL=postgres://user:pass@localhost:5432/db npm run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
   },
