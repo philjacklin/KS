@@ -15,7 +15,8 @@
 		error = false,
 		errorMessage = '',
 		onChange,
-		className
+		className,
+		"data-testid": dataTestId
 	}: {
 		id: string;
 		name: string;
@@ -29,6 +30,7 @@
 		errorMessage?: string;
 		onChange?: (event: Event) => void;
 		className?: string;
+		"data-testid"?: string;
 	} = $props();
 
 	const { container, input, prefix, suffix } = textInputVariants({
@@ -60,6 +62,7 @@
 		aria-invalid={error}
 		aria-describedby={error ? errorId : undefined}
 		onchange={onChange}
+		data-testid={dataTestId}
 	/>
 	{#if required}
         <span 

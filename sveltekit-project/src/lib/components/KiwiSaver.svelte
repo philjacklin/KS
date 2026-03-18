@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Card } from '$lib/components/ui/Card';
+    import { HiddenInput } from '$lib/components/ui/HiddenInput';
     import { Checkbox } from '$lib/components/ui/Checkbox';
     import { Select } from '$lib/components/ui/Select';
     import { TextInput } from '$lib/components/ui/TextInput';
@@ -38,7 +39,7 @@
 </script>
 
 <Container className={container()}>
-    <input type="hidden" name="id" value={id} />
+    <HiddenInput name="id" value={id} />
     <Card className="p-8">
         <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.title')}</Typography>
         <Stack direction="column" spacing="4">
@@ -61,7 +62,7 @@
                                 <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
                                 <TextInput
                                     id="employee-rate"
-                                    name="employeeContributionRate"
+                                    name="employeeContributionRate" data-testid="employee-contribution-rate"
                                     bind:value={employeeRate}
                                     className={inputWrapper()}
                                 />
@@ -70,7 +71,7 @@
                                 <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
                                 <TextInput
                                     id="employer-rate"
-                                    name="employerContributionRate"
+                                    name="employerContributionRate" data-testid="employer-contribution-rate"
                                     bind:value={employerRate}
                                     className={inputWrapper()}
                                 />
@@ -110,7 +111,7 @@
     </Card>
 
     <Stack direction="row" spacing="4">
-        <Button variant="outline" type="submit" name="action" value="save" className={button()}>{$t('kiwisaver.save')}</Button>
-        <Button type="submit" name="action" value="saveAndNext" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
+        <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" className={button()}>{$t('kiwisaver.save')}</Button>
+        <Button type="submit" name="action" value="saveAndNext" data-testid="save-and-next-button" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
     </Stack>
 </Container>

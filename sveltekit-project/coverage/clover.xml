@@ -1,58 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1773872976262" clover="3.2.0">
-  <project timestamp="1773872976262" name="All files">
-    <metrics statements="49" coveredstatements="47" conditionals="0" coveredconditionals="0" methods="59" coveredmethods="59" elements="108" coveredelements="106" complexity="0" loc="49" ncloc="49" packages="1" files="1" classes="1"/>
-    <file name="KiwiSaver.svelte" path="/workspace/sveltekit-project/src/lib/components/KiwiSaver.svelte">
-      <metrics statements="49" coveredstatements="47" conditionals="0" coveredconditionals="0" methods="59" coveredmethods="59"/>
-      <line num="16" count="2" type="stmt"/>
-      <line num="23" count="2" type="stmt"/>
-      <line num="24" count="2" type="stmt"/>
-      <line num="31" count="2" type="stmt"/>
-      <line num="40" count="2" type="stmt"/>
-      <line num="41" count="2" type="stmt"/>
-      <line num="42" count="2" type="stmt"/>
-      <line num="43" count="2" type="stmt"/>
-      <line num="44" count="2" type="stmt"/>
-      <line num="45" count="2" type="stmt"/>
-      <line num="46" count="2" type="stmt"/>
-      <line num="48" count="2" type="stmt"/>
-      <line num="49" count="2" type="stmt"/>
-      <line num="51" count="2" type="stmt"/>
-      <line num="52" count="2" type="stmt"/>
-      <line num="55" count="2" type="stmt"/>
-      <line num="56" count="2" type="stmt"/>
-      <line num="57" count="2" type="stmt"/>
-      <line num="58" count="2" type="stmt"/>
-      <line num="59" count="2" type="stmt"/>
-      <line num="60" count="2" type="stmt"/>
-      <line num="61" count="2" type="stmt"/>
-      <line num="62" count="2" type="stmt"/>
-      <line num="65" count="0" type="stmt"/>
-      <line num="66" count="2" type="stmt"/>
-      <line num="69" count="2" type="stmt"/>
-      <line num="70" count="2" type="stmt"/>
-      <line num="71" count="2" type="stmt"/>
-      <line num="74" count="0" type="stmt"/>
-      <line num="75" count="2" type="stmt"/>
-      <line num="83" count="2" type="stmt"/>
-      <line num="84" count="2" type="stmt"/>
-      <line num="85" count="2" type="stmt"/>
-      <line num="88" count="2" type="stmt"/>
-      <line num="89" count="2" type="stmt"/>
-      <line num="90" count="2" type="stmt"/>
-      <line num="95" count="2" type="stmt"/>
-      <line num="96" count="2" type="stmt"/>
-      <line num="97" count="2" type="stmt"/>
-      <line num="98" count="2" type="stmt"/>
-      <line num="102" count="2" type="stmt"/>
-      <line num="103" count="2" type="stmt"/>
-      <line num="104" count="2" type="stmt"/>
-      <line num="105" count="2" type="stmt"/>
-      <line num="106" count="2" type="stmt"/>
-      <line num="107" count="4" type="stmt"/>
-      <line num="112" count="2" type="stmt"/>
-      <line num="113" count="2" type="stmt"/>
-      <line num="114" count="2" type="stmt"/>
+<coverage generated="1773875179616" clover="3.2.0">
+  <project timestamp="1773875179618" name="All files">
+    <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0" elements="19" coveredelements="0" complexity="0" loc="16" ncloc="16" packages="1" files="1" classes="1"/>
+    <file name="kiwisaver.spec.ts" path="/workspace/sveltekit-project/tests/kiwisaver.spec.ts">
+      <metrics statements="16" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+      <line num="5" count="0" type="stmt"/>
+      <line num="6" count="0" type="stmt"/>
+      <line num="9" count="0" type="stmt"/>
+      <line num="10" count="0" type="stmt"/>
+      <line num="13" count="0" type="stmt"/>
+      <line num="17" count="0" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="24" count="0" type="stmt"/>
+      <line num="27" count="0" type="stmt"/>
+      <line num="30" count="0" type="stmt"/>
+      <line num="33" count="0" type="stmt"/>
+      <line num="34" count="0" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="44" count="0" type="stmt"/>
+      <line num="45" count="0" type="stmt"/>
     </file>
   </project>
 </coverage>

@@ -2,6 +2,7 @@
     import KiwiSaver from '$lib/components/KiwiSaver.svelte';
     import { enhance } from '$app/forms';
     import { Alert } from '$lib/components/ui/Alert';
+    import { Stack } from '$lib/components/ui/Stack';
     import { t } from '$lib/stores/localeStore';
 
     let { data, form } = $props();
@@ -9,15 +10,15 @@
 </script>
 
 {#if form?.error}
-    <div class="mb-8">
+    <Stack className="mb-8" data-testid="error-message">
         <Alert type="error" message={form.error} />
-    </div>
+    </Stack>
 {/if}
 
 {#if form?.success}
-    <div class="mb-8">
+    <Stack className="mb-8" data-testid="success-message">
         <Alert type="success" message={$t('kiwisaver.settings_saved')} />
-    </div>
+    </Stack>
 {/if}
 
 <form method="POST" action="?/update" use:enhance>
