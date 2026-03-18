@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { POST } from './+server';
-import { sql } from '../../../lib/server/db';
+import { sql } from '$lib/server/db';
 
-vi.mock('../../../lib/server/db', () => ({
+vi.mock('$lib/server/db', () => ({
     sql: vi.fn()
 }));
 

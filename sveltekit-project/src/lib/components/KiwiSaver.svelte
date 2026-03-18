@@ -70,13 +70,11 @@
                             <Stack direction="column" spacing="1">
                                 <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
                                 <Stack className={inputWrapper()}>
-                                    <Select id="employee-rate" name="employeeContributionRate" options={employeeRateOptions} value={employeeRate} />
                                 </Stack>
                             </Stack>
                             <Stack direction="column" spacing="1">
                                 <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
                                 <Stack className={wrapper()}>
-                                    <!-- RangeSlider also needs name and hidden input support, but I haven't modified it yet. Wait, I should assume it works? Or modify it? -->
                                     <RangeSlider id="employer-rate" name="employerContributionRate" employeeRate={employeeRateNumber} value={employerRate} />
                                 </Stack>
                             </Stack>
