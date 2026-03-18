@@ -59,7 +59,7 @@
 		class={input()}
 		aria-invalid={error}
 		aria-describedby={error ? errorId : undefined}
-		on:change={onChange}
+		onchange={onChange}
 	/>
 	{#if required}
         <span 

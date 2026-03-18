@@ -8,11 +8,11 @@
     children: Snippet;
     disabled?: boolean;
     loading?: boolean;
-    class?: string;
+    className?: string;
     onclick?: (e: MouseEvent) => void;
   }
 
-  let { variant, size, disabled = false, loading = false, children, class: className, onclick, ...props }: Props = $props();
+  let { variant, size, disabled = false, loading = false, children, className, onclick, ...props }: Props = $props();
 
   // Logic: Disable button if either disabled OR loading is true
   const isDisabled = $derived(disabled || loading);

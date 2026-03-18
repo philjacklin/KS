@@ -2,7 +2,7 @@
     import { Card } from '$lib/components/ui/Card';
     import { Checkbox } from '$lib/components/ui/Checkbox';
     import { Select } from '$lib/components/ui/Select';
-    import { RangeSlider } from '$lib/components/ui/RangeSlider';
+    import { TextInput } from '$lib/components/ui/TextInput';
     import { Slider } from '$lib/components/ui/Slider';
     import { Button } from '$lib/components/ui/Button';
     import { Label } from '$lib/components/ui/Label';
@@ -20,23 +20,13 @@
         optOut,
         tempReduction,
         savingsSuspension,
-        employeeRate,
-        employerRate,
+        employeeRate = $bindable(),
+        employerRate = $bindable(),
         matchEmployerRate,
         contributionsIncluded,
         otherSuper,
         esctRate
     } = $props();
-
-    let employeeRateNumber = $derived(Math.max(parseFloat(employeeRate || '0'), 3.5));
-
-    const employeeRateOptions = ([
-        { label: '3.5%', value: '3.5%' },
-        { label: '4%', value: '4%' },
-        { label: '6%', value: '6%' },
-        { label: '8%', value: '8%' },
-        { label: '10%', value: '10%' }
-    ]);
 
     const esctRateOptions = ([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
@@ -69,14 +59,21 @@
                         <Stack direction="column" spacing="4">
                             <Stack direction="column" spacing="1">
                                 <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
-                                <Stack className={inputWrapper()}>
-                                </Stack>
+                                <TextInput
+                                    id="employee-rate"
+                                    name="employeeContributionRate"
+                                    bind:value={employeeRate}
+                                    className={inputWrapper()}
+                                />
                             </Stack>
                             <Stack direction="column" spacing="1">
                                 <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
-                                <Stack className={wrapper()}>
-                                    <RangeSlider id="employer-rate" name="employerContributionRate" employeeRate={employeeRateNumber} value={employerRate} />
-                                </Stack>
+                                <TextInput
+                                    id="employer-rate"
+                                    name="employerContributionRate"
+                                    bind:value={employerRate}
+                                    className={inputWrapper()}
+                                />
                             </Stack>
                         </Stack>
                     </AccordionContent>
