@@ -1,5 +1,5 @@
 env "tea" {
-  url = getenv("DATABASE_URL")
+  url = "postgres://postgres:ph11Jack11n@host.docker.internal:5432/KS?sslmode=disable"
   migration {
     dir = "file://migrations"
   }
@@ -9,7 +9,8 @@ env "tea" {
 }
 
 env "dev" {
-  url = getenv("DEV_DATABASE_URL")
+  url = "postgres://postgres:ph11Jack11n@host.docker.internal:5432/KS_dev?sslmode=disable"
+  dev = "docker://postgres/15/dev?search_path=public"
   migration {
     dir = "file://migrations"
   }

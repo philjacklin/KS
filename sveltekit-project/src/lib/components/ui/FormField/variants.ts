@@ -1,0 +1,1 @@
+export const formFieldVariants = () => ({ container: () => 'container-class', label: () => 'label-class', requiredIndicator: () => 'required-indicator-class', input: () => 'input-class', description: () => 'description-class', errorMessage: () => 'error-message-class' });
