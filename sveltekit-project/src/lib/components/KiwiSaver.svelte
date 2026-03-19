@@ -19,7 +19,7 @@
     let esctRateError = $state("");
     function validateEsct(event: MouseEvent) {
         if (!contributionsIncluded && !esctRate) {
-            esctRateError = "Please select an ESCT rate.\nAn ESCT rate must be selected based on the employee's estimated annual income, including other employment or other income sources.";
+            esctRateError = $t('kiwisaver.esct_error');
             event.preventDefault();
         }
     }
