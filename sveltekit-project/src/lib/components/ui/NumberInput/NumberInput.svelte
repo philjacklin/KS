@@ -22,7 +22,8 @@
         onChange,
         class: customClass,
         leadingIcon,
-        trailingIcon
+        trailingIcon,
+        ...restProps
     }: {
         type?: 'currency' | 'tax-rate' | 'default';
         label?: string;
@@ -40,6 +41,7 @@
         class?: string;
         leadingIcon?: Snippet;
         trailingIcon?: Snippet;
+        [key: string]: any;
     } = $props();
 
     const id = idProp || `number-input-${++idCounter}`;
@@ -128,7 +130,7 @@
             <div class="absolute left-3 flex items-center">{@render leadingIcon()}</div>
         {/if}
 
-        <input
+        <input {...restProps}
             type="text"
             {id}
             {placeholder}

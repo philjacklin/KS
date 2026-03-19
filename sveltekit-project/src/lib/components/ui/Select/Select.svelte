@@ -14,8 +14,20 @@
 		disabled = false,
 		showSelectedCount = false,
 		className = '',
-		onchange // Callback prop for Svelte 5
-	} = $props();
+		onchange,
+        ...restProps
+	}: {
+        options?: any[];
+        value?: any;
+        name?: string;
+        multiple?: boolean;
+        placeholder?: string;
+        disabled?: boolean;
+        showSelectedCount?: boolean;
+        className?: string;
+        onchange?: (val: any) => void;
+        [key: string]: any;
+    } = $props();
 
 	// State
 	let open = $state(false);
@@ -159,7 +171,7 @@
 
 <div class={twMerge('relative w-full', className)} onkeydown={handleKeydown} role="none">
     <input type="hidden" {name} value={selected} />
-	<button
+	<button {...restProps}
 		bind:this={toggleButton}
 		type="button"
 		class={classes.button()}

@@ -33,5 +33,6 @@
         matchEmployerRate={kiwisaver.match_employer_rate}
         contributionsIncluded={kiwisaver.contributions_included}
         otherSuper={kiwisaver.other_super}
+        notRequiredToContribute={kiwisaver.not_required_to_contribute ?? false}
     />
 </form>

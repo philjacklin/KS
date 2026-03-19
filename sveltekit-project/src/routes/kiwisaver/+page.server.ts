@@ -16,7 +16,8 @@ export const load: PageServerLoad = async () => {
         esct_rate: '10.5%',
         match_employer_rate: false,
         contributions_included: false,
-        other_super: false
+        other_super: false,
+        not_required_to_contribute: false
     };
 
     return {
