@@ -44,6 +44,14 @@
         prevNotRequiredToContribute = notRequiredToContribute;
     });
 
+    $effect(() => {
+        if (contributionsIncluded) {
+            esctRate = '0%';
+        } else {
+            esctRate = '';
+        }
+    });
+
     const employerRateNum = $derived(parseFloat(employerRate.replace('%', '')) || 0);
     const employeeRateNum = $derived(parseFloat(employeeRate.replace('%', '')) || 0);
 
@@ -130,20 +138,22 @@
             </Stack>
         </Card>
 
-        <Card className="p-8">
-            <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
-            <Stack direction="column">
-                <Label for="esct-rate" required class="pt-3">{$t('kiwisaver.esct_rate')}</Label>
-                    <Select 
-                        id="esct-rate" 
-                        name="esctRate" 
-                        options={esctRateOptions} placeholder={$t('kiwisaver.esct_placeholder')} 
-                        value={esctRate} 
-                        onchange={(val) => esctRate = val}
-                        className={inputWrapper()} 
-                    />
-            </Stack>
-        </Card>
+        {#if !contributionsIncluded}
+            <Card className="p-8">
+                <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
+                <Stack direction="column">
+                    <Label for="esct-rate" required class="pt-3">{$t('kiwisaver.esct_rate')}</Label>
+                        <Select 
+                            id="esct-rate" 
+                            name="esctRate" 
+                            options={esctRateOptions} placeholder={$t('kiwisaver.esct_placeholder')} 
+                            value={esctRate} 
+                            onchange={(val) => esctRate = val}
+                            className={inputWrapper()} 
+                        />
+                </Stack>
+            </Card>
+        {/if}
 
         <Stack direction="row">
             <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" className={button()}>{$t('kiwisaver.save')}</Button>
