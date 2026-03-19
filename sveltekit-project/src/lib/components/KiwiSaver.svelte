@@ -30,14 +30,18 @@
         esctRate = $bindable('')
     } = $props();
 
-    const employerRateNum = $derived(parseFloat(employerRate.replace('%', '')) || 0);
+    let prevNotRequiredToContribute = $state(notRequiredToContribute);
 
     $effect(() => {
-        if (!notRequiredToContribute) {
+        if (prevNotRequiredToContribute && !notRequiredToContribute) {
             employeeRate = "3.5%";
             employerRate = "3.5%";
         }
+        prevNotRequiredToContribute = notRequiredToContribute;
     });
+
+    const employerRateNum = $derived(parseFloat(employerRate.replace('%', '')) || 0);
+    const employeeRateNum = $derived(parseFloat(employeeRate.replace('%', '')) || 0);
 
     const employeeRateOptions = $derived([
         ...(notRequiredToContribute ? [{ label: "0%", value: "0%" }] : []),
@@ -49,7 +53,7 @@
         { label: "10%", value: "10%" }
     ]);
 
-    const esctRateOptions = ([
+    const esctRateOptions = $derived([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
         { label: $t('kiwisaver.esct_17_5'), value: '17.5%' },
         { label: $t('kiwisaver.esct_30'), value: '30%' },
@@ -57,10 +61,6 @@
         { label: $t('kiwisaver.esct_39'), value: '39%' }
     ]);
 
-
-    // Validation logic
-    const employeeRateNum = $derived(parseFloat(employeeRate.replace('%', '')));
-    
     // min is 3.5 OR employee rate if that is lower.
     const minEmployerRate = $derived(isNaN(employeeRateNum) ? 3.5 : Math.min(3.5, employeeRateNum));
     const maxEmployerRate = 30;
