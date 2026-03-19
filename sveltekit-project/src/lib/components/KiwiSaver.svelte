@@ -70,7 +70,7 @@
 
     const employerRateError = $derived(
         (employerRateNum < minEmployerRate || employerRateNum > maxEmployerRate)
-        ? `Rate must be between ${minEmployerRate}% and ${maxEmployerRate}%`
+        ? $t('kiwisaver.error_rate_range', { min: minEmployerRate, max: maxEmployerRate })
         : ''
     );
 </script>
@@ -92,7 +92,7 @@
                 <Checkbox bind:checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
                 
                     <Stack direction="column" className="flex-1, mt-4">
-                        <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
+                        <Label for="employee-rate" required class="pt-3">{$t('kiwisaver.employee_rate')}</Label>
                         <div data-testid="employee-contribution-rate">
                             <Select 
                                 id="employee-rate" 
@@ -103,7 +103,7 @@
                                 className={inputWrapper()} 
                             />
                         </div>
-                        <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
+                        <Label for="employer-rate" required class="pt-3">{$t('kiwisaver.employer_rate')}</Label>
                         <NumberInput
                             id="employer-rate"
                             type="tax-rate"
@@ -141,7 +141,7 @@
         <Card className="p-8">
             <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
             <Stack direction="column">
-                <Label for="esct-rate" required>{$t('kiwisaver.esct_rate')}</Label>
+                <Label for="esct-rate" required class="pt-3">{$t('kiwisaver.esct_rate')}</Label>
                 <Stack className={inputWrapper()}>
                     <Select id="esct-rate" name="esctRate" options={esctRateOptions} value={esctRate} />
                 </Stack>
