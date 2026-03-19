@@ -41,6 +41,14 @@
         if (esctRate === null) esctRate = '';
     });
 
+    const employeeRateOptions = ([
+        { label: "3.5%", value: "3.5%" },
+        { label: "4%", value: "4%" },
+        { label: "6%", value: "6%" },
+        { label: "8%", value: "8%" },
+        { label: "10%", value: "10%" }
+    ]);
+
     const esctRateOptions = ([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
         { label: $t('kiwisaver.esct_17_5'), value: '17.5%' },
@@ -68,12 +76,9 @@
             <Stack direction="row" spacing="4">
                 <Stack direction="column" spacing="1" className="flex-1">
                     <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
-                    <TextInput
-                        id="employee-rate"
-                        name="employeeContributionRate" data-testid="employee-contribution-rate"
-                        bind:value={employeeRate}
-                        className={inputWrapper()}
-                    />
+                    <div data-testid="employee-contribution-rate">
+                        <Select id="employee-rate" name="employeeContributionRate" options={employeeRateOptions} value={employeeRate} className={inputWrapper()} />
+                    </div>
                 </Stack>
                 <Stack direction="column" spacing="1" className="flex-1">
                     <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
