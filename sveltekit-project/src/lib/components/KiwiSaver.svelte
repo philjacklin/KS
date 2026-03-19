@@ -73,10 +73,8 @@
     <Card className="p-8">
         <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.title')}</Typography>
         <Stack direction="column" spacing="4">
-            <Stack className={wrapper()}>
+            <Stack className={wrapper()} direction="column" spacing="2">
                 <Checkbox bind:checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
-            </Stack>
-            <Stack className={wrapper()}>
                 <Checkbox bind:checked={notRequiredToContribute} name="notRequiredToContributeStatus" value="true" label={$t('kiwisaver.not_required')} />
             </Stack>
             <Stack className={wrapper()}>
