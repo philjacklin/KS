@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/svelte';
-import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from 'vitest';
-import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
+import { render, screen, userEvent, expect, vi } from '@storybook/test';
+import { describe, it } from 'vitest';
+import KiwiSaverTestHost from '$lib/components/KiwiSaverTestHost.svelte';
+import { localeStoreMock } from '$lib/test-utils/localeStoreMock';
 
-vi.mock('/stores/localeStore', () => {
+vi.mock('$lib/stores/localeStore', () => {
     return {
         t: { 
             subscribe: (fn: any) => { 
@@ -11,8 +11,7 @@ vi.mock('/stores/localeStore', () => {
                     if (key === 'kiwisaver.error_rate_range') {
                         return `Rate must be between ${params.min} and ${params.max}`;
                     }
-                    if (key === 'kiwisaver.esct_error') return 'ESCT rate is required';
-                    return key; // Return the key directly
+                    return key.replace('kiwisaver.', '').replace('_', ' ');
                 }); 
                 return () => {}; 
             } 
@@ -23,7 +22,7 @@ vi.mock('/stores/localeStore', () => {
     };
 });
 
-vi.mock('/components/kiwisaver/variants', () => ({
+vi.mock('$lib/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -35,7 +34,7 @@ vi.mock('/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('/utils', () => ({
+vi.mock('$lib/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
@@ -64,7 +63,7 @@ describe('KiwiSaver Component', () => {
         render(KiwiSaverTestHost, {contributionsIncluded: false, esctRate: ''});
         const saveButton = screen.getByTestId('save-button');
         await user.click(saveButton);
-        const errorMessage = await screen.findByText((content, element) => content.includes("ESCT") && element?.className.includes("text-red-500"));
+        const errorMessage = await screen.findByText((content, element) => content.includes('ESCT') && element?.className.includes('text-red-500'));
         expect(errorMessage).toBeInTheDocument();
     });
 });
