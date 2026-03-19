@@ -10,7 +10,7 @@ env "tea" {
 
 env "dev" {
   url = "postgres://postgres:ph11Jack11n@host.docker.internal:5432/KS_dev?sslmode=disable"
-  dev = "docker://postgres/15/dev?search_path=public"
+  dev = "postgres://postgres:ph11Jack11n@host.docker.internal:5432/KS_dev?search_path=public&sslmode=disable"
   migration {
     dir = "file://migrations"
   }

@@ -3,7 +3,7 @@
     import HiddenInput from '$lib/components/ui/HiddenInput/HiddenInput.svelte';
     import Checkbox from '$lib/components/ui/Checkbox/Checkbox.svelte';
     import Select from '$lib/components/ui/Select/Select.svelte';
-    import TextInput from '$lib/components/ui/TextInput/TextInput.svelte';
+    import NumberInput from '$lib/components/ui/NumberInput/NumberInput.svelte';
     import Slider from '$lib/components/ui/Slider/Slider.svelte';
     import Button from '$lib/components/ui/Button/Button.svelte';
     import Label from '$lib/components/ui/Label/Label.svelte';
@@ -29,8 +29,14 @@
         esctRate = $bindable('')
     } = $props();
 
+    let employerRateNum = $state(parseFloat(employerRate.replace('%', '')) || 0);
+
+    $effect(() => {
+        employerRate = `${employerRateNum}%`;
+    });
 
     const employeeRateOptions = ([
+        { label: "3%", value: "3%" },
         { label: "3.5%", value: "3.5%" },
         { label: "4%", value: "4%" },
         { label: "6%", value: "6%" },
@@ -45,6 +51,20 @@
         { label: $t('kiwisaver.esct_33'), value: '33%' },
         { label: $t('kiwisaver.esct_39'), value: '39%' }
     ]);
+
+
+    // Validation logic
+    const employeeRateNum = $derived(parseFloat(employeeRate.replace('%', '')));
+    
+    // min is 3.5 OR employee rate if that is lower.
+    const minEmployerRate = $derived(isNaN(employeeRateNum) ? 3.5 : Math.min(3.5, employeeRateNum));
+    const maxEmployerRate = 30;
+
+    const employerRateError = $derived(
+        (employerRateNum < minEmployerRate || employerRateNum > maxEmployerRate)
+        ? `Rate must be between ${minEmployerRate}% and ${maxEmployerRate}%`
+        : ''
+    );
 </script>
 
 <Container className={container()}>
@@ -78,10 +98,15 @@
                 </Stack>
                 <Stack direction="column" spacing="1" className="flex-1">
                     <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
-                    <TextInput
+                    <NumberInput
                         id="employer-rate"
+                        type="tax-rate"
                         name="employerContributionRate" data-testid="employer-contribution-rate"
-                        bind:value={employerRate}
+                        bind:value={employerRateNum}
+                        min={minEmployerRate}
+                        max={maxEmployerRate}
+                        error={!!employerRateError}
+                        errorMessage={employerRateError}
                         className={inputWrapper()}
                     />
                 </Stack>
