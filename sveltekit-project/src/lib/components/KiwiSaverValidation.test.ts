@@ -1,4 +1,4 @@
-import { localeStoreMock } from "/test-utils/localeStoreMock";
+import { localeStoreMock } from '/test-utils/localeStoreMock';
 import { render, screen, userEvent, waitFor, expect, vi } from '@storybook/test';
 import { describe, it } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
@@ -31,7 +31,7 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
             employerRate: '10'
         });
         
-        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
+        const employerInput = screen.getByLabelText('employer rate');
         await user.clear(employerInput);
         await user.type(employerInput, '10');
         await user.click(document.body);
@@ -44,7 +44,7 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
         const user = userEvent.setup();
         render(KiwiSaverTestHost, {});
         
-        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
+        const employerInput = screen.getByLabelText('employer rate');
         await user.clear(employerInput);
         await user.type(employerInput, '2');
         await user.click(document.body);
@@ -58,7 +58,7 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
         const user = userEvent.setup();
         render(KiwiSaverTestHost, {});
         
-        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
+        const employerInput = screen.getByLabelText('employer rate');
         await user.clear(employerInput);
         await user.type(employerInput, '31');
         await user.click(document.body);
@@ -82,7 +82,7 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
         await user.click(option);
 
         // Set employer rate to 3%
-        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
+        const employerInput = screen.getByLabelText('employer rate');
         await user.clear(employerInput);
         await user.type(employerInput, '3');
         await user.click(document.body);
