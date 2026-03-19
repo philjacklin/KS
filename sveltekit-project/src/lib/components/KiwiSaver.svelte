@@ -137,7 +137,7 @@
                     <Select 
                         id="esct-rate" 
                         name="esctRate" 
-                        options={esctRateOptions} 
+                        options={esctRateOptions} placeholder={$t('kiwisaver.esct_placeholder')} 
                         value={esctRate} 
                         onchange={(val) => esctRate = val}
                         className={inputWrapper()} 
