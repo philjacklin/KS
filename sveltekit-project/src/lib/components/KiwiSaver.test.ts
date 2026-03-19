@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/svelte';
+import { render, screen, fireEvent, within } from '@testing-library/svelte';
 import { describe, it, expect, vi } from 'vitest';
 import KiwiSaverTestHost from '$lib/components/KiwiSaverTestHost.svelte';
 
@@ -47,5 +47,50 @@ describe('KiwiSaver Component', () => {
         expect(checkbox).toBeChecked();
         await fireEvent.click(checkbox);
         expect(checkbox).not.toBeChecked();
+    });
+
+    it('updates employee contribution rate', async () => {
+        render(KiwiSaverTestHost);
+        
+        // Open the select dropdown
+        const selectContainer = screen.getByTestId('employee-contribution-rate');
+        const toggleButton = within(selectContainer).getByRole('button');
+        await fireEvent.click(toggleButton);
+        
+        // Find and click an option
+        const option = screen.getByText('4%');
+        await fireEvent.click(option);
+        
+        // Assert the value changed
+        expect(toggleButton).toHaveTextContent('4%');
+    });
+
+    it('updates employer contribution rate', async () => {
+        render(KiwiSaverTestHost);
+        
+        const input = screen.getByLabelText('kiwisaver.employer_rate');
+        
+        await fireEvent.focus(input);
+        await fireEvent.input(input, { target: { value: '5' } });
+        await fireEvent.blur(input);
+        
+        expect(input).toHaveValue('5.00');
+    });
+
+    it('handles invalid employee rate', async () => {
+        render(KiwiSaverTestHost, {
+            employeeRate: undefined
+        });
+        expect(screen.getByText('kiwisaver.title')).toBeInTheDocument();
+    });
+
+    it('handles null employer rate change', async () => {
+        render(KiwiSaverTestHost);
+        const input = screen.getByLabelText('kiwisaver.employer_rate');
+        await fireEvent.focus(input);
+        await fireEvent.input(input, { target: { value: '' } });
+        await fireEvent.blur(input);
+        
+        expect(input).toBeInTheDocument();
     });
 });
