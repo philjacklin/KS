@@ -1,3 +1,4 @@
+import { localeStoreMock } from "$lib/test-utils/localeStoreMock";
 import { render } from '@testing-library/svelte';
 import { screen, userEvent, waitFor, expect, vi } from '@storybook/test';
 import { describe, it } from 'vitest';
@@ -5,20 +6,7 @@ import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
 vi.mock('$lib/stores/localeStore', () => ({
-    t: { 
-        subscribe: (fn: any) => { 
-            fn((key: string, params: any = {}) => {
-                if (key === 'kiwisaver.error_rate_range') {
-                    return `Rate must be between ${params.min} and ${params.max}`;
-                }
-                return key;
-            }); 
-            return () => {}; 
-        } 
-    },
-    locale: { subscribe: () => {} },
-    translations: { subscribe: () => {}, loadTranslations: vi.fn() },
-    setLocale: vi.fn()
+    ...localeStoreMock
 }));
 
 vi.mock('$lib/components/kiwisaver/variants', () => ({
