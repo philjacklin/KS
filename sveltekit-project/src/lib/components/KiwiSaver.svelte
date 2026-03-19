@@ -10,10 +10,6 @@
     import Typography from '$lib/components/ui/Typography/Typography.svelte';
     import Stack from '$lib/components/ui/Stack/Stack.svelte';
     import Container from '$lib/components/ui/Container/Container.svelte';
-    import Accordion from '$lib/components/ui/Accordion/Accordion.svelte';
-    import AccordionItem from '$lib/components/ui/Accordion/AccordionItem.svelte';
-    import AccordionHeader from '$lib/components/ui/Accordion/AccordionHeader.svelte';
-    import AccordionContent from '$lib/components/ui/Accordion/AccordionContent.svelte';
 
     import { t } from '$lib/stores/localeStore';
     import { kiwiSaverVariants } from '$lib/components/kiwisaver/variants';
@@ -69,33 +65,26 @@
                 <Checkbox bind:checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
             </Stack>
             
-            <Accordion>
-                <AccordionItem id="rates">
-                    <AccordionHeader>{$t('kiwisaver.rates_settings')}</AccordionHeader>
-                    <AccordionContent>
-                        <Stack direction="column" spacing="4">
-                            <Stack direction="column" spacing="1">
-                                <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
-                                <TextInput
-                                    id="employee-rate"
-                                    name="employeeContributionRate" data-testid="employee-contribution-rate"
-                                    bind:value={employeeRate}
-                                    className={inputWrapper()}
-                                />
-                            </Stack>
-                            <Stack direction="column" spacing="1">
-                                <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
-                                <TextInput
-                                    id="employer-rate"
-                                    name="employerContributionRate" data-testid="employer-contribution-rate"
-                                    bind:value={employerRate}
-                                    className={inputWrapper()}
-                                />
-                            </Stack>
-                        </Stack>
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
+            <Stack direction="row" spacing="4">
+                <Stack direction="column" spacing="1" className="flex-1">
+                    <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
+                    <TextInput
+                        id="employee-rate"
+                        name="employeeContributionRate" data-testid="employee-contribution-rate"
+                        bind:value={employeeRate}
+                        className={inputWrapper()}
+                    />
+                </Stack>
+                <Stack direction="column" spacing="1" className="flex-1">
+                    <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
+                    <TextInput
+                        id="employer-rate"
+                        name="employerContributionRate" data-testid="employer-contribution-rate"
+                        bind:value={employerRate}
+                        className={inputWrapper()}
+                    />
+                </Stack>
+            </Stack>
 
             <Stack direction="row" justify="between" align="center" className={stack()}>
                 <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
