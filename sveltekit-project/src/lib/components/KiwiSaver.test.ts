@@ -1,6 +1,6 @@
-import { render, screen, within, fireEvent } from '@testing-library/svelte';
-import { userEvent } from '@storybook/test';
-import { describe, it, expect, vi } from 'vitest';
+import { render } from '@testing-library/svelte';
+import { screen, within, userEvent, expect, vi } from '@storybook/test';
+import { describe, it } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
@@ -89,8 +89,6 @@ describe('KiwiSaver Component', () => {
         
         await user.clear(input);
         await user.type(input, '5');
-        // Explicitly fire change event to trigger $derived binding
-        await fireEvent.change(input, { target: { value: '5' } });
         
         expect(input).toHaveValue(5);
     });
@@ -114,7 +112,6 @@ describe('KiwiSaver Component', () => {
         
         await user.clear(input);
         await user.type(input, '1');
-        await fireEvent.change(input, { target: { value: '1' } });
         
         // Should be clamped to 3.50 because minEmployerRate is 3.5
         expect(input).toHaveValue(3.5);
