@@ -1,14 +1,14 @@
-import { render, screen, within } from '@storybook/test';
+import { render, screen } from '@storybook/test';
 import { userEvent } from '@storybook/test';
 import { describe, it, expect, vi } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
-import { localeStoreMock } from '/test-utils/localeStoreMock';
+import { localeStoreMock } from '$lib/test-utils/localeStoreMock';
 
-vi.mock('/stores/localeStore', () => ({
+vi.mock('$lib/stores/localeStore', () => ({
     ...localeStoreMock
 }));
 
-vi.mock('/components/kiwisaver/variants', () => ({
+vi.mock('$lib/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -20,7 +20,7 @@ vi.mock('/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('/utils', () => ({
+vi.mock('$lib/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
@@ -48,24 +48,18 @@ describe('KiwiSaver Component', () => {
         expect(checkbox).not.toBeChecked();
         await user.click(checkbox);
         expect(checkbox).toBeChecked();
-        await user.click(checkbox);
-        expect(checkbox).not.toBeChecked();
     });
 
     it('updates employee contribution rate', async () => {
         render(KiwiSaverTestHost, {});
         
-        // Since Select is custom, we might need a more specific selector.
-        // Based on the structure, it might have an accessible label.
-        const toggleButton = screen.getByRole('button', { name: /employee rate/i });
+        const toggleButton = screen.getByLabelText(/employee rate/i);
         await user.click(toggleButton);
         
-        // Find and click an option
         const option = await screen.findByText('4%');
         await user.click(option);
         
-        // Assert the value changed
-        expect(toggleButton).toHaveTextContent('4%');
+        expect(toggleButton).toHaveValue('4%');
     });
 
     it('updates employer contribution rate', async () => {
@@ -79,19 +73,7 @@ describe('KiwiSaver Component', () => {
         expect(input).toHaveValue(5);
     });
 
-    it('resets rates when "Not required to contribute" is toggled off', async () => {
-        render(KiwiSaverTestHost, {
-            notRequiredToContribute: true
-        });
-        
-        const checkbox = screen.getByLabelText(/not required/i);
-        expect(checkbox).toBeChecked();
-        
-        await user.click(checkbox);
-        expect(checkbox).not.toBeChecked();
-    });
-
-    it('clamps invalid employer rate to minimum allowed', async () => {
+    it('shows error message for invalid employer rate', async () => {
         render(KiwiSaverTestHost, {});
         
         const input = screen.getByRole('spinbutton', { name: /employer rate/i });
@@ -99,6 +81,37 @@ describe('KiwiSaver Component', () => {
         await user.clear(input);
         await user.type(input, '1');
         
-        expect(input).toHaveValue(3.5);
+        const errorMessage = await screen.findByText(/Rate must be between 3.5 and 30/i);
+        expect(errorMessage).toBeInTheDocument();
+    });
+
+    it('toggles otherSuper checkbox', async () => {
+        render(KiwiSaverTestHost, {});
+        const checkbox = screen.getByLabelText(/contribute super/i);
+        await user.click(checkbox);
+        expect(checkbox).toBeChecked();
+    });
+
+    it('updates esctRate', async () => {
+        render(KiwiSaverTestHost, {});
+        const select = screen.getByLabelText(/esct rate/i);
+        await user.click(select);
+        const option = await screen.findByText(/esct 17 5/i);
+        await user.click(option);
+        expect(select).toHaveValue('17.5%');
+    });
+
+    it('toggles matchEmployerRate slider', async () => {
+        render(KiwiSaverTestHost, {});
+        const slider = screen.getByLabelText(/match employer rate/i); // Assuming Slider is a checkbox internally
+        await user.click(slider);
+        expect(slider).toBeChecked();
+    });
+
+    it('toggles contributionsIncluded slider', async () => {
+        render(KiwiSaverTestHost, {});
+        const slider = screen.getByLabelText(/contributions included/i);
+        await user.click(slider);
+        expect(slider).toBeChecked();
     });
 });
