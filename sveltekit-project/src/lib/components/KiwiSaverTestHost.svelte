@@ -12,7 +12,7 @@
         contributionsIncluded = false,
         otherSuper = false,
         esctRate = ''
-    } = ();
+    } = $props();
 </script>
 
 <form>

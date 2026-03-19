@@ -1,15 +1,14 @@
-import { localeStoreMock } from "$lib/test-utils/localeStoreMock";
-import { render } from '@testing-library/svelte';
-import { screen, userEvent, waitFor, expect, vi } from '@storybook/test';
+import { localeStoreMock } from "/test-utils/localeStoreMock";
+import { render, screen, userEvent, waitFor, expect, vi } from '@storybook/test';
 import { describe, it } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
-vi.mock('$lib/stores/localeStore', () => ({
+vi.mock('/stores/localeStore', () => ({
     ...localeStoreMock
 }));
 
-vi.mock('$lib/components/kiwisaver/variants', () => ({
+vi.mock('/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -21,7 +20,7 @@ vi.mock('$lib/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('$lib/utils', () => ({
+vi.mock('/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
