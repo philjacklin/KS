@@ -16,6 +16,14 @@
 
     const { container, cardTitle, wrapper, inputWrapper, stack, button } = kiwiSaverVariants();
 
+    let esctRateError = $state("");
+    function validateEsct(event: MouseEvent) {
+        if (!contributionsIncluded && !esctRate) {
+            esctRateError = "Please select an ESCT rate.\nAn ESCT rate must be selected based on the employee's estimated annual income, including other employment or other income sources.";
+            event.preventDefault();
+        }
+    }
+
     let {
         id = '',
         optOut = $bindable(false),
@@ -148,16 +156,19 @@
                             name="esctRate" 
                             options={esctRateOptions} placeholder={$t('kiwisaver.esct_placeholder')} 
                             value={esctRate} 
-                            onchange={(val) => esctRate = val}
+                            onchange={(val) => { esctRate = val; esctRateError = ""; }}
                             className={inputWrapper()} 
                         />
+                    {#if esctRateError}
+                        <Typography variant="body2" className="text-red-500 mt-2 whitespace-pre-line">{esctRateError}</Typography>
+                    {/if}
                 </Stack>
             </Card>
         {/if}
 
         <Stack direction="row">
-            <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" className={button()}>{$t('kiwisaver.save')}</Button>
-            <Button type="submit" name="action" value="saveAndNext" data-testid="save-and-next-button" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
+            <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" onclick={validateEsct} className={button()}>{$t('kiwisaver.save')}</Button>
+            <Button type="submit" name="action" value="saveAndNext" data-testid="save-and-next-button" onclick={validateEsct} className={button()}>{$t('kiwisaver.save_and_next')}</Button>
         </Stack>
     {/if}
 </Container>
