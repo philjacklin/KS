@@ -31,6 +31,9 @@
     } = $props();
 
     let prevNotRequiredToContribute = $state(notRequiredToContribute);
+    employerRate = '3.5%';
+    matchEmployerRate = false;
+    contributionsIncluded = false;
 
     $effect(() => {
         if (prevNotRequiredToContribute && !notRequiredToContribute) {
@@ -52,16 +55,18 @@
         { label: "10%", value: "10%" }
     ]);
 
-    const esctRateOptions = $derived([
-        { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
-        { label: $t('kiwisaver.esct_17_5'), value: '17.5%' },
-        { label: $t('kiwisaver.esct_30'), value: '30%' },
-        { label: $t('kiwisaver.esct_33'), value: '33%' },
-        { label: $t('kiwisaver.esct_39'), value: '39%' }
-    ]);
 
     const minEmployerRate = $derived(isNaN(employeeRateNum) ? 3.5 : Math.min(3.5, employeeRateNum));
     const maxEmployerRate = 30;
+
+    let esctRateOptions = $state([]);
+    $effect(() => {
+        fetch("/api/esct-rates")
+            .then(res => res.json())
+            .then(data => {
+                esctRateOptions = data;
+            });
+    });
 
     const employerRateError = $derived(
         (employerRateNum < minEmployerRate || employerRateNum > maxEmployerRate)
