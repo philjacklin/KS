@@ -11,7 +11,8 @@
         matchEmployerRate = false,
         contributionsIncluded = false,
         otherSuper = false,
-        esctRate = ''
+        esctRate = '',
+        esctRateOptions = [{label: '17.5%', value: '17.5%'}, {label: '30%', value: '30%'}]
     } = $props();
 </script>
 
@@ -28,5 +29,6 @@
         {contributionsIncluded}
         {otherSuper}
         {esctRate}
+        {esctRateOptions}
     />
 </form>
