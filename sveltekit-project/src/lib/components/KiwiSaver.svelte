@@ -1,33 +1,49 @@
 <script lang="ts">
-    import { Card } from '$lib/components/ui/Card';
-    import { HiddenInput } from '$lib/components/ui/HiddenInput';
-    import { Checkbox } from '$lib/components/ui/Checkbox';
-    import { Select } from '$lib/components/ui/Select';
-    import { TextInput } from '$lib/components/ui/TextInput';
-    import { Slider } from '$lib/components/ui/Slider';
-    import { Button } from '$lib/components/ui/Button';
-    import { Label } from '$lib/components/ui/Label';
-    import { Typography } from '$lib/components/ui/Typography';
+    import Card from '$lib/components/ui/Card/Card.svelte';
+    import HiddenInput from '$lib/components/ui/HiddenInput/HiddenInput.svelte';
+    import Checkbox from '$lib/components/ui/Checkbox/Checkbox.svelte';
+    import Select from '$lib/components/ui/Select/Select.svelte';
+    import TextInput from '$lib/components/ui/TextInput/TextInput.svelte';
+    import Slider from '$lib/components/ui/Slider/Slider.svelte';
+    import Button from '$lib/components/ui/Button/Button.svelte';
+    import Label from '$lib/components/ui/Label/Label.svelte';
+    import Typography from '$lib/components/ui/Typography/Typography.svelte';
+    import Stack from '$lib/components/ui/Stack/Stack.svelte';
+    import Container from '$lib/components/ui/Container/Container.svelte';
+    import Accordion from '$lib/components/ui/Accordion/Accordion.svelte';
+    import AccordionItem from '$lib/components/ui/Accordion/AccordionItem.svelte';
+    import AccordionHeader from '$lib/components/ui/Accordion/AccordionHeader.svelte';
+    import AccordionContent from '$lib/components/ui/Accordion/AccordionContent.svelte';
+
     import { t } from '$lib/stores/localeStore';
-    import { Stack } from '$lib/components/ui/Stack';
-    import { Container } from '$lib/components/ui/Container';
-    import { Accordion, AccordionItem, AccordionHeader, AccordionContent } from '$lib/components/ui/Accordion';
     import { kiwiSaverVariants } from '$lib/components/kiwisaver/variants';
 
     const { container, cardTitle, wrapper, inputWrapper, stack, button } = kiwiSaverVariants();
 
     let {
-        id,
-        optOut,
-        tempReduction,
-        savingsSuspension,
-        employeeRate = $bindable(),
-        employerRate = $bindable(),
-        matchEmployerRate,
-        contributionsIncluded,
-        otherSuper,
-        esctRate
+        id = '',
+        optOut = $bindable(false),
+        tempReduction = $bindable(false),
+        savingsSuspension = $bindable(false),
+        employeeRate = $bindable(''),
+        employerRate = $bindable(''),
+        matchEmployerRate = $bindable(false),
+        contributionsIncluded = $bindable(false),
+        otherSuper = $bindable(false),
+        esctRate = $bindable('')
     } = $props();
+
+    $effect(() => {
+        if (optOut === null) optOut = false;
+        if (tempReduction === null) tempReduction = false;
+        if (savingsSuspension === null) savingsSuspension = false;
+        if (employeeRate === null) employeeRate = '';
+        if (employerRate === null) employerRate = '';
+        if (matchEmployerRate === null) matchEmployerRate = false;
+        if (contributionsIncluded === null) contributionsIncluded = false;
+        if (otherSuper === null) otherSuper = false;
+        if (esctRate === null) esctRate = '';
+    });
 
     const esctRateOptions = ([
         { label: $t('kiwisaver.esct_10_5'), value: '10.5%' },
@@ -44,13 +60,13 @@
         <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.title')}</Typography>
         <Stack direction="column" spacing="4">
             <Stack className={wrapper()}>
-                <Checkbox checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
+                <Checkbox bind:checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
             </Stack>
             <Stack className={wrapper()}>
-                <Checkbox checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
+                <Checkbox bind:checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
             </Stack>
             <Stack className={wrapper()}>
-                <Checkbox checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
+                <Checkbox bind:checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
             </Stack>
             
             <Accordion>
@@ -83,12 +99,12 @@
 
             <Stack direction="row" justify="between" align="center" className={stack()}>
                 <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
-                <Slider id="match-rate" name="matchEmployerRate" checked={matchEmployerRate} />
+                <Slider id="match-rate" name="matchEmployerRate" bind:checked={matchEmployerRate} />
             </Stack>
             
             <Stack direction="row" justify="between" align="center" className={stack()}>
                 <Label for="contributions-included">{$t('kiwisaver.contributions_included')}</Label>
-                <Slider id="contributions-included" name="contributionsIncluded" checked={contributionsIncluded} />
+                <Slider id="contributions-included" name="contributionsIncluded" bind:checked={contributionsIncluded} />
             </Stack>
         </Stack>
     </Card>
@@ -96,7 +112,7 @@
     <Card className="p-8">
         <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.other_super')}</Typography>
         <Stack className={wrapper()}>
-            <Checkbox checked={otherSuper} name="otherSuper" value="true" label={$t('kiwisaver.contribute_super')} />
+            <Checkbox bind:checked={otherSuper} name="otherSuper" value="true" label={$t('kiwisaver.contribute_super')} />
         </Stack>
     </Card>
 

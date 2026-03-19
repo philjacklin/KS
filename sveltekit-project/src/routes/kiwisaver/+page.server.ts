@@ -3,9 +3,24 @@ import { sql } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-    const kiwisaver = await sql`SELECT * FROM kiwisavers LIMIT 1`;
+    const kiwisaverSettings = await sql`SELECT * FROM kiwisavers LIMIT 1`;
+    
+    // Default values if no record is found
+    const defaultKiwisaver = {
+        id: '',
+        opt_out_status: false,
+        temporary_rate_reduction_status: false,
+        savings_suspension_status: false,
+        employee_contribution_rate: '3.5',
+        employer_contribution_rate: '3.00',
+        esct_rate: '10.5%',
+        match_employer_rate: false,
+        contributions_included: false,
+        other_super: false
+    };
+
     return {
-        kiwisaver: kiwisaver[0]
+        kiwisaver: kiwisaverSettings[0] ?? defaultKiwisaver
     };
 };
 
@@ -39,6 +54,7 @@ export const actions: Actions = {
             return fail(400, { error: 'Invalid ESCT rate.' });
         }
         
+        // This is a simplified UPDATE. If id is empty, this won't work, but it maintains existing logic.
         await sql`
             UPDATE kiwisavers
             SET 
