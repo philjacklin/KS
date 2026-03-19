@@ -1,3 +1,8 @@
+@import "tailwindcss";
+
+/* This line is CRITICAL for v4 to see your custom colors/spacing */
+@config "../tailwind.config.js"; 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

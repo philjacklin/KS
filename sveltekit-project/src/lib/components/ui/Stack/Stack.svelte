@@ -20,6 +20,6 @@
 
 </script>
 
-<div class={stackVariants({ direction, spacing, align, justify, className })}>
+<div class={stackVariants({ direction, spacing, align, justify, class:className })}>
 	{@render children?.()}
 </div>

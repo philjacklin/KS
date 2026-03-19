@@ -83,7 +83,7 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
         await user.click(selectButton!);
         
         // Wait for dropdown
-        const option = await screen.findByText('3%');
+        const option = await screen.findByText('3.5%');
         await user.click(option);
 
         // Set employer rate to 3%

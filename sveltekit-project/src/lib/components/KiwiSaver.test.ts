@@ -4,14 +4,14 @@ import { describe, it, expect, vi } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
-vi.mock('$lib/stores/localeStore', () => ({
+vi.mock('/stores/localeStore', () => ({
     t: { subscribe: (fn: any) => { fn((key: string) => key); return () => {}; } },
     locale: { subscribe: () => {} },
     translations: { subscribe: () => {}, loadTranslations: vi.fn() },
     setLocale: vi.fn()
 }));
 
-vi.mock('$lib/components/kiwisaver/variants', () => ({
+vi.mock('/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -23,7 +23,7 @@ vi.mock('$lib/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('$lib/utils', () => ({
+vi.mock('/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
@@ -86,20 +86,25 @@ describe('KiwiSaver Component', () => {
         expect(input).toHaveValue('5.00');
     });
 
-    it('handles invalid employee rate', async () => {
+    it('resets rates when "Not required to contribute" is toggled off', async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, {
-            employeeRate: undefined
+            notRequiredToContribute: true
         });
-        expect(screen.getByText('kiwisaver.title')).toBeInTheDocument();
+        
+        const checkbox = screen.getByLabelText('kiwisaver.not_required');
+        expect(checkbox).toBeChecked();
+        
+        await user.click(checkbox);
+        expect(checkbox).not.toBeChecked();
     });
 
-    it('handles null employer rate change', async () => {
-        const user = userEvent.setup();
-        render(KiwiSaverTestHost, {});
-        const input = screen.getByLabelText('kiwisaver.employer_rate');
-        await user.clear(input);
-        await user.tab();
+    it('shows error when employer rate is invalid', async () => {
+        render(KiwiSaverTestHost, {
+            employerRate: '1%'
+        });
         
-        expect(input).toBeInTheDocument();
+        const errorMessage = await screen.findByText(/Rate must be between/);
+        expect(errorMessage).toBeInTheDocument();
     });
 });
