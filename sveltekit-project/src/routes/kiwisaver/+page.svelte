@@ -4,9 +4,11 @@
     import { Alert } from '$lib/components/ui/Alert';
     import { Stack } from '$lib/components/ui/Stack';
     import { t } from '$lib/stores/localeStore';
+    import type { PageData } from './$types';
 
-    let { data, form } = $props();
+    let { data, form }: { data: PageData, form: any } = $props();
     let kiwisaver = data.kiwisaver;
+    let esctRates = data.esctRates;
 </script>
 
 {#if form?.error}
@@ -30,6 +32,7 @@
         employeeRate={kiwisaver.employee_contribution_rate}
         employerRate={kiwisaver.employer_contribution_rate}
         esctRate={kiwisaver.esct_rate}
+        esctRateOptions={esctRates}
         matchEmployerRate={kiwisaver.match_employer_rate}
         contributionsIncluded={kiwisaver.contributions_included}
         otherSuper={kiwisaver.other_super}

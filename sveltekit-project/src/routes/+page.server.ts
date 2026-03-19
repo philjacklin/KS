@@ -1,5 +1,6 @@
 import { sql } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
+import { esctRates } from '$lib/esct-rates';
 
 export const load: PageServerLoad = async () => {
     const kiwisaverSettings = await sql`
@@ -18,6 +19,7 @@ export const load: PageServerLoad = async () => {
     };
     
     return {
-        kiwisaver: kiwisaverSettings[0] ?? defaultKiwisaver
+        kiwisaver: kiwisaverSettings[0] ?? defaultKiwisaver,
+        esctRates
     };
 };

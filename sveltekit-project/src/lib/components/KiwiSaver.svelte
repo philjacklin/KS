@@ -27,7 +27,8 @@
         matchEmployerRate = $bindable(false),
         contributionsIncluded = $bindable(false),
         otherSuper = $bindable(false),
-        esctRate = $bindable('')
+        esctRate = $bindable(''),
+        esctRateOptions = []
     } = $props();
 
     let prevNotRequiredToContribute = $state(notRequiredToContribute);
@@ -58,15 +59,6 @@
 
     const minEmployerRate = $derived(isNaN(employeeRateNum) ? 3.5 : Math.min(3.5, employeeRateNum));
     const maxEmployerRate = 30;
-
-    let esctRateOptions = $state([]);
-    $effect(() => {
-        fetch("/api/esct-rates")
-            .then(res => res.json())
-            .then(data => {
-                esctRateOptions = data;
-            });
-    });
 
     const employerRateError = $derived(
         (employerRateNum < minEmployerRate || employerRateNum > maxEmployerRate)

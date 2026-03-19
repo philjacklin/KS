@@ -5,7 +5,7 @@
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
-    let { kiwisaver } = data;
+    let { kiwisaver, esctRates } = data;
 </script>
 
 <Container className="bg-payroll-paper min-h-screen p-8">
@@ -23,5 +23,6 @@
         contributionsIncluded={true} 
         otherSuper={false} 
         esctRate={kiwisaver.esct_rate}
+        esctRateOptions={esctRates}
     />
 </Container>
