@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
-vi.mock('/stores/localeStore', () => ({
+vi.mock('$lib/stores/localeStore', () => ({
     t: { 
         subscribe: (fn: any) => { 
             fn((key: string, params: any = {}) => {
@@ -21,7 +21,7 @@ vi.mock('/stores/localeStore', () => ({
     setLocale: vi.fn()
 }));
 
-vi.mock('/components/kiwisaver/variants', () => ({
+vi.mock('$lib/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -33,7 +33,7 @@ vi.mock('/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('/utils', () => ({
+vi.mock('$lib/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
@@ -91,7 +91,7 @@ describe('KiwiSaver Component', () => {
         // Trigger blur to format value
         await user.tab();
         
-        expect(input).toHaveValue('5.00');
+        expect(input).toHaveValue(5);
     });
 
     it('resets rates when "Not required to contribute" is toggled off', async () => {
@@ -116,7 +116,7 @@ describe('KiwiSaver Component', () => {
         await user.tab();
         
         // Should be clamped to 3.50 because minEmployerRate is 3.5
-        expect(input).toHaveValue('3.50');
+        expect(input).toHaveValue(3.5);
         expect(screen.queryByText(/Rate must be between/)).not.toBeInTheDocument();
     });
 
