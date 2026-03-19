@@ -19,6 +19,7 @@
     let {
         id = '',
         optOut = $bindable(false),
+        notRequiredToContribute = $bindable(false),
         tempReduction = $bindable(false),
         savingsSuspension = $bindable(false),
         employeeRate = $bindable(''),
@@ -74,6 +75,9 @@
         <Stack direction="column" spacing="4">
             <Stack className={wrapper()}>
                 <Checkbox bind:checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
+            </Stack>
+            <Stack className={wrapper()}>
+                <Checkbox bind:checked={notRequiredToContribute} name="notRequiredToContributeStatus" value="true" label={$t('kiwisaver.not_required')} />
             </Stack>
             <Stack className={wrapper()}>
                 <Checkbox bind:checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
