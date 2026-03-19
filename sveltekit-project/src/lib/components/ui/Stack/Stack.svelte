@@ -6,6 +6,7 @@
 	type Props = StackVariants & {
 		className?: string;
 		children: Snippet;
+		[key: string]: any;
 	};
 
 	// Get all props, including the variants
@@ -15,11 +16,12 @@
 		align,
 		justify,
 		className,
-		children
+		children,
+		...rest
 	}: Props = $props();
 
 </script>
 
-<div class={stackVariants({ direction, spacing, align, justify, class:className })}>
+<div class={stackVariants({ direction, spacing, align, justify, class:className })} {...rest}>
 	{@render children?.()}
 </div>
