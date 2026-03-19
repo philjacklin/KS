@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { esctRates } from '$lib/esct-rates';
+import { esctRates } from '/esct-rates';
 
-export async function GET() {
+export function GET() {
     return json(esctRates);
 }

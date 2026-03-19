@@ -1,11 +1,14 @@
 import { type Actions, fail } from '@sveltejs/kit';
 import { sql } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
-import { esctRates } from '$lib/esct-rates';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ fetch }) => {
     const kiwisaverSettings = await sql`SELECT * FROM kiwisavers LIMIT 1`;
     
+    // Fetch ESCT rates from the API
+    const response = await fetch('/api/esct-rates');
+    const esctRates = await response.json();
+
     // Default values if no record is found
     const defaultKiwisaver = {
         id: '',
