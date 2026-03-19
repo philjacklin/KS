@@ -30,16 +30,12 @@
         esctRate = $bindable('')
     } = $props();
 
-    let employerRateNum = $state(parseFloat(employerRate.replace('%', '')) || 0);
-
-    $effect(() => {
-        employerRate = `${employerRateNum}%`;
-    });
+    const employerRateNum = $derived(parseFloat(employerRate.replace('%', '')) || 0);
 
     $effect(() => {
         if (!notRequiredToContribute) {
             employeeRate = "3.5%";
-            employerRateNum = 3.5;
+            employerRate = "3.5%";
         }
     });
 
@@ -112,7 +108,8 @@
                         id="employer-rate"
                         type="tax-rate"
                         name="employerContributionRate" data-testid="employer-contribution-rate"
-                        bind:value={employerRateNum}
+                        value={employerRateNum}
+                        onChange={(val) => { if (val !== null) employerRate = `${val}%`; }}
                         min={minEmployerRate}
                         max={maxEmployerRate}
                         error={!!employerRateError}
