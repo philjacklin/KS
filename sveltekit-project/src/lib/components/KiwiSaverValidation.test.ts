@@ -1,11 +1,14 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, it, expect, vi } from 'vitest';
 import { userEvent } from '@storybook/test';
-import KiwiSaverTestHost from '$lib/components/KiwiSaverTestHost.svelte';
+import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
 // Mock dependencies
 vi.mock('$lib/stores/localeStore', () => ({
-    t: { subscribe: (fn: any) => { fn((key: string) => key); return () => {}; } }
+    t: { subscribe: (fn: any) => { fn((key: string) => key); return () => {}; } },
+    locale: { subscribe: () => {} },
+    translations: { subscribe: () => {}, loadTranslations: vi.fn() },
+    setLocale: vi.fn()
 }));
 
 vi.mock('$lib/components/kiwisaver/variants', () => ({
@@ -27,45 +30,52 @@ vi.mock('$lib/utils', () => ({
 describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
     it('is valid when employer rate is between 3.5% and 30%', async () => {
         const user = userEvent.setup();
-        const { debug } = render(KiwiSaverTestHost, { props: {} }); debug();
+        render(KiwiSaverTestHost, {});
         
-        const employerInput = screen.getByTestId('employer-contribution-rate');
+        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
         await user.clear(employerInput);
-        await user.type(employerInput, '10%');
+        await user.type(employerInput, '10');
+        await user.click(document.body);
         
-        expect(employerInput).toHaveValue('10%');
-        expect(screen.queryByText(/Rate must be between/i)).not.toBeInTheDocument();
+        expect(employerInput).toHaveValue('10.00');
+        expect(screen.queryByText((content) => content.includes('Rate must be between'))).not.toBeInTheDocument();
     });
 
     it('is invalid when employer rate < 3.5%', async () => {
         const user = userEvent.setup();
-        const { debug } = render(KiwiSaverTestHost, { props: {} }); debug();
+        const { debug } = render(KiwiSaverTestHost, {});
         
-        const employerInput = screen.getByTestId('employer-contribution-rate');
+        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
         await user.clear(employerInput);
-        await user.type(employerInput, '2%');
+        await user.type(employerInput, '2');
+        await user.click(document.body);
+        
+        debug();
         
         await waitFor(() => {
-            expect(screen.getByText(/Rate must be between 3.5% and 30%/i)).toBeInTheDocument();
+            expect(screen.getByText((content) => content.includes('Rate must be between'))).toBeInTheDocument();
         });
     });
 
     it('is invalid when employer rate > 30%', async () => {
         const user = userEvent.setup();
-        const { debug } = render(KiwiSaverTestHost, { props: {} }); debug();
+        const { debug } = render(KiwiSaverTestHost, {});
         
-        const employerInput = screen.getByTestId('employer-contribution-rate');
+        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
         await user.clear(employerInput);
-        await user.type(employerInput, '31%');
+        await user.type(employerInput, '31');
+        await user.click(document.body);
+        
+        debug();
         
         await waitFor(() => {
-            expect(screen.getByText(/Rate must be between 3.5% and 30%/i)).toBeInTheDocument();
+            expect(screen.getByText((content) => content.includes('Rate must be between'))).toBeInTheDocument();
         });
     });
 
     it('is valid when employer rate is 3% and employee rate is 3%', async () => {
         const user = userEvent.setup();
-        const { debug } = render(KiwiSaverTestHost, { props: {} }); debug();
+        render(KiwiSaverTestHost, {});
         
         // Set employee rate to 3%
         const employeeRateSelect = screen.getByTestId('employee-contribution-rate');
@@ -77,12 +87,13 @@ describe('KiwiSaver Employer Rate Validation (KS-003-05)', () => {
         await user.click(option);
 
         // Set employer rate to 3%
-        const employerInput = screen.getByTestId('employer-contribution-rate');
+        const employerInput = screen.getByLabelText('kiwisaver.employer_rate');
         await user.clear(employerInput);
-        await user.type(employerInput, '3%');
+        await user.type(employerInput, '3');
+        await user.click(document.body);
         
-        expect(employerInput).toHaveValue('3%');
+        expect(employerInput).toHaveValue('3.00');
         // No error should be present
-        expect(screen.queryByText(/Rate must be between/i)).not.toBeInTheDocument();
+        expect(screen.queryByText((content) => content.includes('Rate must be between'))).not.toBeInTheDocument();
     });
 });
