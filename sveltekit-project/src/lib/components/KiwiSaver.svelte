@@ -77,7 +77,14 @@
                 <Stack direction="column" spacing="1" className="flex-1">
                     <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
                     <div data-testid="employee-contribution-rate">
-                        <Select id="employee-rate" name="employeeContributionRate" options={employeeRateOptions} value={employeeRate} className={inputWrapper()} />
+                        <Select 
+                            id="employee-rate" 
+                            name="employeeContributionRate" 
+                            options={employeeRateOptions} 
+                            value={employeeRate} 
+                            onchange={(val) => employeeRate = val}
+                            className={inputWrapper()} 
+                        />
                     </div>
                 </Stack>
                 <Stack direction="column" spacing="1" className="flex-1">
