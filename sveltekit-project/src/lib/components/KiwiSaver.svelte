@@ -79,77 +79,84 @@
         <Stack direction="column" spacing="4">
             <Stack className={wrapper()} direction="column" spacing="2">
                 <Checkbox bind:checked={optOut} name="optOutStatus" value="true" label={$t('kiwisaver.opt_out')} />
-                <Checkbox bind:checked={notRequiredToContribute} name="notRequiredToContributeStatus" value="true" label={$t('kiwisaver.not_required')} />
             </Stack>
-            <Stack className={wrapper()}>
-                <Checkbox bind:checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
-            </Stack>
-            <Stack className={wrapper()}>
-                <Checkbox bind:checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
-            </Stack>
-            
-            <Stack direction="row" spacing="4">
-                <Stack direction="column" spacing="1" className="flex-1">
-                    <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
-                    <div data-testid="employee-contribution-rate">
-                        <Select 
-                            id="employee-rate" 
-                            name="employeeContributionRate" 
-                            options={employeeRateOptions} 
-                            value={employeeRate} 
-                            onchange={(val) => employeeRate = val}
-                            className={inputWrapper()} 
+
+            {#if !optOut}
+                <Stack className={wrapper()} direction="column" spacing="2">
+                    <Checkbox bind:checked={notRequiredToContribute} name="notRequiredToContributeStatus" value="true" label={$t('kiwisaver.not_required')} />
+                </Stack>
+                <Stack className={wrapper()}>
+                    <Checkbox bind:checked={tempReduction} name="temporaryRateReductionStatus" value="true" label={$t('kiwisaver.temp_reduction')} />
+                </Stack>
+                <Stack className={wrapper()}>
+                    <Checkbox bind:checked={savingsSuspension} name="savingsSuspensionStatus" value="true" label={$t('kiwisaver.savings_suspension')} />
+                </Stack>
+                
+                <Stack direction="row" spacing="4">
+                    <Stack direction="column" spacing="1" className="flex-1">
+                        <Label for="employee-rate" required>{$t('kiwisaver.employee_rate')}</Label>
+                        <div data-testid="employee-contribution-rate">
+                            <Select 
+                                id="employee-rate" 
+                                name="employeeContributionRate" 
+                                options={employeeRateOptions} 
+                                value={employeeRate} 
+                                onchange={(val) => employeeRate = val}
+                                className={inputWrapper()} 
+                            />
+                        </div>
+                    </Stack>
+                    <Stack direction="column" spacing="1" className="flex-1">
+                        <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
+                        <NumberInput
+                            id="employer-rate"
+                            type="tax-rate"
+                            name="employerContributionRate" data-testid="employer-contribution-rate"
+                            value={employerRateNum}
+                            onChange={(val) => { if (val !== null) employerRate = `${val}%`; }}
+                            min={minEmployerRate}
+                            max={maxEmployerRate}
+                            error={!!employerRateError}
+                            errorMessage={employerRateError}
+                            className={inputWrapper()}
                         />
-                    </div>
+                    </Stack>
                 </Stack>
-                <Stack direction="column" spacing="1" className="flex-1">
-                    <Label for="employer-rate" required>{$t('kiwisaver.employer_rate')}</Label>
-                    <NumberInput
-                        id="employer-rate"
-                        type="tax-rate"
-                        name="employerContributionRate" data-testid="employer-contribution-rate"
-                        value={employerRateNum}
-                        onChange={(val) => { if (val !== null) employerRate = `${val}%`; }}
-                        min={minEmployerRate}
-                        max={maxEmployerRate}
-                        error={!!employerRateError}
-                        errorMessage={employerRateError}
-                        className={inputWrapper()}
-                    />
+
+                <Stack direction="row" justify="between" align="center" className={stack()}>
+                    <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
+                    <Slider id="match-rate" name="matchEmployerRate" bind:checked={matchEmployerRate} />
+                </Stack>
+                
+                <Stack direction="row" justify="between" align="center" className={stack()}>
+                    <Label for="contributions-included">{$t('kiwisaver.contributions_included')}</Label>
+                    <Slider id="contributions-included" name="contributionsIncluded" bind:checked={contributionsIncluded} />
+                </Stack>
+            {/if}
+        </Stack>
+    </Card>
+
+    {#if !optOut}
+        <Card className="p-8">
+            <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.other_super')}</Typography>
+            <Stack className={wrapper()}>
+                <Checkbox bind:checked={otherSuper} name="otherSuper" value="true" label={$t('kiwisaver.contribute_super')} />
+            </Stack>
+        </Card>
+
+        <Card className="p-8">
+            <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
+            <Stack direction="column" spacing="1">
+                <Label for="esct-rate" required>{$t('kiwisaver.esct_rate')}</Label>
+                <Stack className={inputWrapper()}>
+                    <Select id="esct-rate" name="esctRate" options={esctRateOptions} value={esctRate} />
                 </Stack>
             </Stack>
+        </Card>
 
-            <Stack direction="row" justify="between" align="center" className={stack()}>
-                <Label for="match-rate">{$t('kiwisaver.match_employer_rate')}</Label>
-                <Slider id="match-rate" name="matchEmployerRate" bind:checked={matchEmployerRate} />
-            </Stack>
-            
-            <Stack direction="row" justify="between" align="center" className={stack()}>
-                <Label for="contributions-included">{$t('kiwisaver.contributions_included')}</Label>
-                <Slider id="contributions-included" name="contributionsIncluded" bind:checked={contributionsIncluded} />
-            </Stack>
+        <Stack direction="row" spacing="4">
+            <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" className={button()}>{$t('kiwisaver.save')}</Button>
+            <Button type="submit" name="action" value="saveAndNext" data-testid="save-and-next-button" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
         </Stack>
-    </Card>
-
-    <Card className="p-8">
-        <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.other_super')}</Typography>
-        <Stack className={wrapper()}>
-            <Checkbox bind:checked={otherSuper} name="otherSuper" value="true" label={$t('kiwisaver.contribute_super')} />
-        </Stack>
-    </Card>
-
-    <Card className="p-8">
-        <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
-        <Stack direction="column" spacing="1">
-            <Label for="esct-rate" required>{$t('kiwisaver.esct_rate')}</Label>
-            <Stack className={inputWrapper()}>
-                <Select id="esct-rate" name="esctRate" options={esctRateOptions} value={esctRate} />
-            </Stack>
-        </Stack>
-    </Card>
-
-    <Stack direction="row" spacing="4">
-        <Button variant="outline" type="submit" name="action" value="save" data-testid="save-button" className={button()}>{$t('kiwisaver.save')}</Button>
-        <Button type="submit" name="action" value="saveAndNext" data-testid="save-and-next-button" className={button()}>{$t('kiwisaver.save_and_next')}</Button>
-    </Stack>
+    {/if}
 </Container>
