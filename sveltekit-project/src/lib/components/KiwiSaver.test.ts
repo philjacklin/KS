@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, it, expect, vi } from 'vitest';
 import { userEvent } from '@storybook/test';
-import KiwiSaverTest from '$lib/components/KiwiSaverTest.svelte';
+import KiwiSaverTestHost from '/components/KiwiSaverTestHost.svelte';
 
 // Mock dependencies
-vi.mock('$lib/stores/localeStore', () => ({
+vi.mock('/stores/localeStore', () => ({
     t: { subscribe: (fn: any) => { fn((key: string) => key); return () => {}; } }
 }));
 
-vi.mock('$lib/components/kiwisaver/variants', () => ({
+vi.mock('/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -20,20 +20,27 @@ vi.mock('$lib/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('$lib/utils', () => ({
+vi.mock('/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
 describe('KiwiSaver Component', () => {
-    it('renders correctly', async () => {
-        render(KiwiSaverTest);
+    it('renders correctly with server provided defaults', async () => {
+        render(KiwiSaverTestHost, {
+            employeeRate: '3.5%',
+            employerRate: '3.5%'
+        });
         expect(screen.getByText('kiwisaver.title')).toBeInTheDocument();
         expect(screen.getByText('kiwisaver.opt_out')).toBeInTheDocument();
+        
+        // Verify defaults
+        const employerInput = screen.getByTestId('employer-contribution-rate');
+        expect(employerInput).toHaveValue('3.5%');
     });
 
     it('handles interactions and form actions', async () => {
         const user = userEvent.setup();
-        render(KiwiSaverTest);
+        render(KiwiSaverTestHost);
 
         // Checkbox interaction
         const optOutCheckbox = screen.getByLabelText('kiwisaver.opt_out');
@@ -48,5 +55,19 @@ describe('KiwiSaver Component', () => {
         const saveAndNextButton = screen.getByRole('button', { name: 'kiwisaver.save_and_next' });
         expect(saveAndNextButton).toHaveAttribute('name', 'action');
         expect(saveAndNextButton).toHaveAttribute('value', 'saveAndNext');
+    });
+
+    it('allows changing employee and employer rates', async () => {
+        const user = userEvent.setup();
+        render(KiwiSaverTestHost, {
+            employeeRate: '3.5%',
+            employerRate: '3.5%'
+        });
+        
+        // Interact with employer input
+        const employerInput = screen.getByTestId('employer-contribution-rate');
+        await user.clear(employerInput);
+        await user.type(employerInput, '4%');
+        expect(employerInput).toHaveValue('4%');
     });
 });

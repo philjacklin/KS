@@ -12,7 +12,7 @@ export const load: PageServerLoad = async () => {
         temporary_rate_reduction_status: false,
         savings_suspension_status: false,
         employee_contribution_rate: '3.5',
-        employer_contribution_rate: '3.00',
+        employer_contribution_rate: '3.5',
         esct_rate: '10.5%',
         match_employer_rate: false,
         contributions_included: false,

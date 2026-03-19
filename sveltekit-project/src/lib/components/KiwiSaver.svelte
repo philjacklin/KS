@@ -29,17 +29,6 @@
         esctRate = $bindable('')
     } = $props();
 
-    $effect(() => {
-        if (optOut === null) optOut = false;
-        if (tempReduction === null) tempReduction = false;
-        if (savingsSuspension === null) savingsSuspension = false;
-        if (employeeRate === null) employeeRate = '';
-        if (employerRate === null) employerRate = '';
-        if (matchEmployerRate === null) matchEmployerRate = false;
-        if (contributionsIncluded === null) contributionsIncluded = false;
-        if (otherSuper === null) otherSuper = false;
-        if (esctRate === null) esctRate = '';
-    });
 
     const employeeRateOptions = ([
         { label: "3.5%", value: "3.5%" },
