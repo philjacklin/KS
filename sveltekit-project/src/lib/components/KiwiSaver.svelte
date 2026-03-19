@@ -1,18 +1,18 @@
 <script lang="ts">
-    import Card from '/components/ui/Card/Card.svelte';
-    import HiddenInput from '/components/ui/HiddenInput/HiddenInput.svelte';
-    import Checkbox from '/components/ui/Checkbox/Checkbox.svelte';
-    import Select from '/components/ui/Select/Select.svelte';
-    import NumberInput from '/components/ui/NumberInput/NumberInput.svelte';
-    import Slider from '/components/ui/Slider/Slider.svelte';
-    import Button from '/components/ui/Button/Button.svelte';
-    import Label from '/components/ui/Label/Label.svelte';
-    import Typography from '/components/ui/Typography/Typography.svelte';
-    import Stack from '/components/ui/Stack/Stack.svelte';
-    import Container from '/components/ui/Container/Container.svelte';
+    import Card from '$lib/components/ui/Card/Card.svelte';
+    import HiddenInput from '$lib/components/ui/HiddenInput/HiddenInput.svelte';
+    import Checkbox from '$lib/components/ui/Checkbox/Checkbox.svelte';
+    import Select from '$lib/components/ui/Select/Select.svelte';
+    import NumberInput from '$lib/components/ui/NumberInput/NumberInput.svelte';
+    import Slider from '$lib/components/ui/Slider/Slider.svelte';
+    import Button from '$lib/components/ui/Button/Button.svelte';
+    import Label from '$lib/components/ui/Label/Label.svelte';
+    import Typography from '$lib/components/ui/Typography/Typography.svelte';
+    import Stack from '$lib/components/ui/Stack/Stack.svelte';
+    import Container from '$lib/components/ui/Container/Container.svelte';
 
-    import { t } from '/stores/localeStore';
-    import { kiwiSaverVariants } from '/components/kiwisaver/variants';
+    import { t } from '$lib/stores/localeStore';
+    import { kiwiSaverVariants } from '$lib/components/kiwisaver/variants';
 
     const { container, cardTitle, wrapper, inputWrapper, stack, button } = kiwiSaverVariants();
 
