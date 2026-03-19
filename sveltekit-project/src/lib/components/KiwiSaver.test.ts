@@ -1,28 +1,15 @@
-import { render } from '@testing-library/svelte';
-import { screen, within, userEvent, expect, vi } from '@storybook/test';
-import { describe, it } from 'vitest';
+import { render, screen, within } from '@testing-library/svelte';
+import { userEvent } from '@storybook/test';
+import { describe, it, expect, vi } from 'vitest';
 import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
+import { localeStoreMock } from '/test-utils/localeStoreMock';
 
-// Mock dependencies
-vi.mock('$lib/stores/localeStore', () => ({
-    t: { 
-        subscribe: (fn: any) => { 
-            fn((key: string, params: any = {}) => {
-                if (key === 'kiwisaver.error_rate_range') {
-                    return `Rate must be between ${params.min} and ${params.max}`;
-                }
-                // Return a readable version of the key for testing
-                return key.replace('kiwisaver.', '').replace('_', ' ');
-            }); 
-            return () => {}; 
-        } 
-    },
-    locale: { subscribe: () => {} },
-    translations: { subscribe: () => {}, loadTranslations: vi.fn() },
-    setLocale: vi.fn()
+vi.mock('/stores/localeStore', () => ({
+    default: localeStoreMock,
+    ...localeStoreMock
 }));
 
-vi.mock('$lib/components/kiwisaver/variants', () => ({
+vi.mock('/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -34,7 +21,7 @@ vi.mock('$lib/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('$lib/utils', () => ({
+vi.mock('/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
@@ -46,19 +33,19 @@ describe('KiwiSaver Component', () => {
             employeeRate: '3.5%',
             employerRate: '3.5%'
         });
-        expect(screen.getByText('title')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /title/i })).toBeInTheDocument();
     });
 
     it('handles interactions and form actions', async () => {
         render(KiwiSaverTestHost, {});
-        const optOutCheckbox = screen.getByLabelText('opt out');
+        const optOutCheckbox = screen.getByLabelText(/opt out/i);
         await user.click(optOutCheckbox);
         expect(optOutCheckbox).toBeChecked();
     });
 
     it('allows toggling "Not required to contribute" checkbox', async () => {
         render(KiwiSaverTestHost, {});
-        const checkbox = screen.getByLabelText('not required');
+        const checkbox = screen.getByLabelText(/not required/i);
         expect(checkbox).not.toBeChecked();
         await user.click(checkbox);
         expect(checkbox).toBeChecked();
@@ -69,9 +56,9 @@ describe('KiwiSaver Component', () => {
     it('updates employee contribution rate', async () => {
         render(KiwiSaverTestHost, {});
         
-        // Open the select dropdown
-        const selectContainer = screen.getByTestId('employee-contribution-rate');
-        const toggleButton = within(selectContainer).getByRole('button');
+        // Since Select is custom, we might need a more specific selector.
+        // Based on the structure, it might have an accessible label.
+        const toggleButton = screen.getByRole('button', { name: /employee rate/i });
         await user.click(toggleButton);
         
         // Find and click an option
@@ -85,7 +72,7 @@ describe('KiwiSaver Component', () => {
     it('updates employer contribution rate', async () => {
         render(KiwiSaverTestHost, {});
         
-        const input = screen.getByLabelText('employer rate');
+        const input = screen.getByRole('spinbutton', { name: /employer rate/i });
         
         await user.clear(input);
         await user.type(input, '5');
@@ -98,7 +85,7 @@ describe('KiwiSaver Component', () => {
             notRequiredToContribute: true
         });
         
-        const checkbox = screen.getByLabelText('not required');
+        const checkbox = screen.getByLabelText(/not required/i);
         expect(checkbox).toBeChecked();
         
         await user.click(checkbox);
@@ -108,12 +95,11 @@ describe('KiwiSaver Component', () => {
     it('clamps invalid employer rate to minimum allowed', async () => {
         render(KiwiSaverTestHost, {});
         
-        const input = screen.getByLabelText('employer rate');
+        const input = screen.getByRole('spinbutton', { name: /employer rate/i });
         
         await user.clear(input);
         await user.type(input, '1');
         
-        // Should be clamped to 3.50 because minEmployerRate is 3.5
         expect(input).toHaveValue(3.5);
     });
 });
