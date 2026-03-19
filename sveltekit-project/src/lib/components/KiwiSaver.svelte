@@ -134,9 +134,14 @@
             <Typography variant="h2" as="h2" className={cardTitle()}>{$t('kiwisaver.esct_title')}</Typography>
             <Stack direction="column">
                 <Label for="esct-rate" required class="pt-3">{$t('kiwisaver.esct_rate')}</Label>
-                <Stack className={inputWrapper()}>
-                    <Select id="esct-rate" name="esctRate" options={esctRateOptions} value={esctRate} />
-                </Stack>
+                    <Select 
+                        id="esct-rate" 
+                        name="esctRate" 
+                        options={esctRateOptions} 
+                        value={esctRate} 
+                        onchange={(val) => esctRate = val}
+                        className={inputWrapper()} 
+                    />
             </Stack>
         </Card>
 
