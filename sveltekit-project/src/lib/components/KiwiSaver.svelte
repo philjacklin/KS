@@ -36,7 +36,15 @@
         employerRate = `${employerRateNum}%`;
     });
 
-    const employeeRateOptions = ([
+    $effect(() => {
+        if (!notRequiredToContribute) {
+            employeeRate = "3.5%";
+            employerRateNum = 3.5;
+        }
+    });
+
+    const employeeRateOptions = $derived([
+        ...(notRequiredToContribute ? [{ label: "0%", value: "0%" }] : []),
         { label: "3%", value: "3%" },
         { label: "3.5%", value: "3.5%" },
         { label: "4%", value: "4%" },
