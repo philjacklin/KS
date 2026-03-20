@@ -41,6 +41,10 @@
 
     let prevNotRequiredToContribute = $state(notRequiredToContribute);
 
+    employerRate = '3.5%';
+    contributionsIncluded = false;
+    matchEmployerRate = false;
+
     $effect(() => {
         if (prevNotRequiredToContribute && !notRequiredToContribute) {
             employeeRate = "3.5%";
