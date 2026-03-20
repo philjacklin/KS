@@ -1,25 +1,10 @@
-import { render, screen, waitFor } from '@testing-library/svelte';
-import userEvent from '@testing-library/user-event';
-import { expect, vi, describe, it } from 'vitest';
+import { render, screen, userEvent, waitFor, expect } from '@storybook/test';
+import { describe, it, vi } from 'vitest';
 import KiwiSaverTestHost from '$lib/components/KiwiSaverTestHost.svelte';
+import { localeStoreMock } from '$lib/test-utils/localeStoreMock';
 
 vi.mock('$lib/stores/localeStore', () => {
-    return {
-        t: { 
-            subscribe: (fn: any) => { 
-                fn((key: string, params: any = {}) => {
-                    if (key === 'kiwisaver.error_rate_range') {
-                        return `Rate must be between ${params.min} and ${params.max}`;
-                    }
-                    return key.replace('kiwisaver.', '').replace('_', ' ');
-                }); 
-                return () => {}; 
-            } 
-        },
-        locale: { subscribe: () => {} },
-        translations: { subscribe: () => {}, loadTranslations: vi.fn() },
-        setLocale: vi.fn()
-    };
+    return { ...localeStoreMock };
 });
 
 vi.mock('$lib/components/kiwisaver/variants', () => ({
@@ -39,26 +24,36 @@ vi.mock('$lib/utils', () => ({
 }));
 
 describe('KiwiSaver Component', () => {
-    const user = userEvent.setup();
-
     it('allows toggling "contributions included" toggle', async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, {});
         const toggle = screen.getByLabelText('contributions included');
+        
         expect(toggle).toHaveAttribute('aria-checked', 'false');
-        await user.click(toggle); await waitFor(() => expect(toggle).toHaveAttribute('aria-checked', 'true'));
+        
+        await user.click(toggle);
+        
+        await waitFor(() => {
+            expect(toggle).toHaveAttribute('aria-checked', 'true');
+        });
+        
         expect(toggle).toHaveAttribute('aria-checked', 'true');
     });
 
     it('allows selecting ESCT rate', async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, { contributionsIncluded: false });
         const select = screen.getByLabelText('esct rate');
         await user.click(select);
     });
 
     it('shows error message when no ESCT rate is selected and button clicked', async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, {contributionsIncluded: false, esctRate: ''});
         const saveButton = screen.getByTestId('save-button');
+        
         await user.click(saveButton);
+        
         const errorMessage = await screen.findByText('esct error', { selector: '.text-red-500' });
         expect(errorMessage).toBeInTheDocument();
     });
@@ -69,19 +64,22 @@ describe('KiwiSaver Component', () => {
     });
 
     it("handles rate changes", async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, { notRequiredToContribute: false });
         // Select
         const select = screen.getByLabelText('employee rate');
         await user.click(select);
         // NumberInput
-        const numberInput = screen.getByLabelText('employer rate');
+        const numberInput = screen.getByLabelText('employer rate') as HTMLInputElement;
         await user.clear(numberInput);
         await user.type(numberInput, '5');
         await user.click(document.body);
+        
         expect(numberInput.value).toBe('5.00');
     });
 
     it("handles esctRate change", async () => {
+        const user = userEvent.setup();
         render(KiwiSaverTestHost, { contributionsIncluded: false });
         const select = screen.getByLabelText('esct rate');
         await user.click(select);
