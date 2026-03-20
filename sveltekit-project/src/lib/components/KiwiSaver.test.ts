@@ -1,25 +1,26 @@
-import { render, screen, waitFor } from '@testing-library/svelte';
-import userEvent from '@testing-library/user-event';
-import { describe, it, vi, expect } from 'vitest';
-import KiwiSaver from './KiwiSaver.svelte';
+import { render } from '@testing-library/svelte';
+import { screen, waitFor, userEvent, expect, vi } from '@storybook/test';
+import { describe, it } from 'vitest';
+import KiwiSaverTestHost from './KiwiSaverTestHost.svelte';
 
-vi.mock('/stores/localeStore', () => {
-    return {
-        t: { 
-            subscribe: (fn: any) => { 
-                fn((key: string, params: any = {}) => {
-                    return key;
-                }); 
-                return () => {}; 
-            } 
-        },
-        locale: { subscribe: () => {} },
-        translations: { subscribe: () => {}, loadTranslations: vi.fn() },
-        setLocale: vi.fn()
-    };
-});
+vi.mock('$lib/stores/localeStore', () => ({
+    t: { 
+        subscribe: (fn: any) => { 
+            fn((key: string, params: any = {}) => {
+                if (key === 'kiwisaver.error_rate_range') {
+                    return `Rate must be between ${params.min} and ${params.max}`;
+                }
+                return key.replace('kiwisaver.', '').replace('_', ' ');
+            }); 
+            return () => {}; 
+        } 
+    },
+    locale: { subscribe: () => {} },
+    translations: { subscribe: () => {}, loadTranslations: vi.fn() },
+    setLocale: vi.fn()
+}));
 
-vi.mock('/components/kiwisaver/variants', () => ({
+vi.mock('$lib/components/kiwisaver/variants', () => ({
     kiwiSaverVariants: () => ({
         container: () => 'container',
         cardTitle: () => 'cardTitle',
@@ -31,16 +32,16 @@ vi.mock('/components/kiwisaver/variants', () => ({
 }));
 
 // Mock utils
-vi.mock('/utils', () => ({
+vi.mock('$lib/utils', () => ({
     cn: (...args: any[]) => args.join(' ')
 }));
 
 describe('KiwiSaver Component', () => {
     it('allows toggling "contributions included" toggle', async () => {
         const user = userEvent.setup();
-        render(KiwiSaver, {});
+        render(KiwiSaverTestHost, {});
         // Find label by key
-        const label = screen.getByText('kiwisaver.contributions_included');
+        const label = screen.getByText('contributions included');
         const toggle = screen.getByLabelText(label.textContent!);
         
         expect(toggle).toHaveAttribute('aria-checked', 'false');
@@ -56,9 +57,9 @@ describe('KiwiSaver Component', () => {
 
     it('allows selecting ESCT rate', async () => {
         const user = userEvent.setup();
-        render(KiwiSaver, { contributionsIncluded: false, esctRateOptions: [{label: '17.5%', value: '17.5%'}] });
+        render(KiwiSaverTestHost, { contributionsIncluded: false, esctRateOptions: [{label: '17.5%', value: '17.5%'}] });
         
-        const label = screen.getByText('kiwisaver.esct_rate');
+        const label = screen.getByText('esct rate');
         const select = screen.getByLabelText(label.textContent!);
         await user.click(select);
         
@@ -71,31 +72,31 @@ describe('KiwiSaver Component', () => {
 
     it('shows error message when no ESCT rate is selected and button clicked', async () => {
         const user = userEvent.setup();
-        render(KiwiSaver, {contributionsIncluded: false, esctRate: ''});
+        render(KiwiSaverTestHost, {contributionsIncluded: false, esctRate: ''});
         const saveButton = screen.getByTestId('save-button');
         
         await user.click(saveButton);
         
-        const errorMessage = await screen.findByText('kiwisaver.esct_error', { selector: '.text-red-500' });
+        const errorMessage = await screen.findByText('esct error', { selector: '.text-red-500' });
         expect(errorMessage).toBeInTheDocument();
     });
 
     it("does not show content when optOut is true", async () => {
-        render(KiwiSaver, { optOut: true });
-        expect(screen.queryByText("kiwisaver.employee_rate")).not.toBeInTheDocument();
+        render(KiwiSaverTestHost, { optOut: true });
+        expect(screen.queryByText("employee rate")).not.toBeInTheDocument();
     });
 
     it("handles rate changes", async () => {
         const user = userEvent.setup();
-        render(KiwiSaver, { notRequiredToContribute: false });
+        render(KiwiSaverTestHost, { notRequiredToContribute: false });
         
-        const label = screen.getByText('kiwisaver.employee_rate');
+        const label = screen.getByText('employee rate');
         const select = screen.getByLabelText(label.textContent!);
         await user.click(select);
         const option = screen.getByRole('option', { name: '4%' });
         await user.click(option);
         
-        const employerLabel = screen.getByText('kiwisaver.employer_rate');
+        const employerLabel = screen.getByText('employer rate');
         const numberInput = screen.getByLabelText(employerLabel.textContent!) as HTMLInputElement;
         
         await user.clear(numberInput);
@@ -107,9 +108,9 @@ describe('KiwiSaver Component', () => {
 
     it("handles esctRate change", async () => {
         const user = userEvent.setup();
-        render(KiwiSaver, { contributionsIncluded: false, esctRateOptions: [{label: '30%', value: '30%'}] });
+        render(KiwiSaverTestHost, { contributionsIncluded: false, esctRateOptions: [{label: '30%', value: '30%'}] });
         
-        const label = screen.getByText('kiwisaver.esct_rate');
+        const label = screen.getByText('esct rate');
         const select = screen.getByLabelText(label.textContent!);
         await user.click(select);
         
@@ -121,9 +122,9 @@ describe('KiwiSaver Component', () => {
     });
 
     it("handles default esctRateOptions prop", async () => {
-        render(KiwiSaver, { contributionsIncluded: false });
+        render(KiwiSaverTestHost, { contributionsIncluded: false });
         // No options should be available
-        const label = screen.getByText('kiwisaver.esct_rate');
+        const label = screen.getByText('esct rate');
         const select = screen.getByLabelText(label.textContent!);
         await userEvent.click(select);
         
